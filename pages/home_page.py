@@ -1,12 +1,12 @@
 from components.search_bar import SearchBar
-
+from components.navbar_horizontal import NavbarHorizontal
 class HomePage:
     URL = "https://ecommerce-playground.lambdatest.io/"
 
     def __init__(self, page):
         self.page = page
         self.search_bar = SearchBar(page)
-
+        self.navbar_horizontal = NavbarHorizontal(page)
     def goto(self):
         self.page.goto(self.URL)
 
