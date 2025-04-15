@@ -18,3 +18,10 @@ def test_navbar_horizontal_special_hot(page):
     assert page.url.startswith('https://ecommerce-playground.lambdatest.io/')
     assert page.url.endswith('route=product/special')
 
+def test_navbar_horizontal_home_page(page):
+    home = HomePage(page)
+    home.goto()
+    home.navbar_horizontal.click_home_page()
+    assert page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=common/home'
+    assert page.url.startswith('https://ecommerce-playground.lambdatest.io/')
+    assert page.url.endswith('route=common/home')
