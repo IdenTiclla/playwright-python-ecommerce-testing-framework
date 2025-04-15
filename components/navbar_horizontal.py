@@ -1,5 +1,6 @@
 class NavbarHorizontal:
     BLOG_OPTION = "ul.horizontal a[href*='/blog/home']"
+    SPECIAL_HOT = "ul.horizontal a[href*='route=product/special']"
     def __init__(self, page):
         self.page = page
 
@@ -9,4 +10,5 @@ class NavbarHorizontal:
     def click_my_account(self):
         self.page.click("#my_account")
         
-        
+    def click_special_hot(self):
+        self.page.click(self.SPECIAL_HOT)
