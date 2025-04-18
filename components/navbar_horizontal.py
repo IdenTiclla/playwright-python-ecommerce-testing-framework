@@ -29,4 +29,8 @@ class NavbarHorizontal:
         # Ahora hacemos click en la opción
         option_link.click()
 
-    
+    def click_my_account_option(self, option):
+        my_account_option = self.page.get_by_role("button", name=" My account")
+        my_account_option.hover()
+        option_link = self.page.get_by_role("link", name=option, exact=True)
+        option_link.click()
