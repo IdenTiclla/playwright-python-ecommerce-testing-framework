@@ -1,28 +1,60 @@
-
 import pytest
-# from pages.auth.login_page import LoginPage
-from pages.home_page import HomePage
+from pages.login_page import LoginPage
+from playwright.sync_api import Page, expect
 
-def test_login(page):
-    home = HomePage(page)
-    home.goto()
-    home.navbar_horizontal.click_my_account_option("Login")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/login"
+class TestLogin:
+    @pytest.fixture
+    def login_page(self, page: Page) -> LoginPage:
+        return LoginPage(page)
+    
+    def test_user_can_login(self, login_page: LoginPage):
+        # Navigate to login page
+        login_page.navigate()
+        
+        # Login with valid credentials
+        login_page.login(
+            email="jose.lopez@gmail.com",
+            password="P@ssw0rd"
+        )
+        
+        # Verify successful login (redirected to account page)
+        expect(login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/account")
 
-    # assert that the url contains "account/login"
-    assert "account/login" in page.url
+        assert login_page.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
 
-    # wait for load state
-    page.wait_for_load_state("domcontentloaded")
-
-    home.navbar_horizontal.click_my_account_option("Register")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/register"
-
-    # assert that the url contains "account/register"
-    assert "account/register" in page.url
-
-    # wait for load state
-    page.wait_for_load_state("domcontentloaded")
+    def test_invalid_login(self, login_page: LoginPage):
+        # Navigate to login page
+        login_page.navigate()
+        
+        # Try to login with invalid credentials
+        login_page.login(
+            email="invalid1@example.com",
+            password="WrongPassword"
+        )
+        
+        # Verify error message is displayed
+        expect(login_page.page.locator(".alert-danger")).to_be_visible()
+        expect(login_page.page.locator(".alert-danger")).to_contain_text("Warning: No match for E-Mail Address and/or Password")
+        
+    def test_forgotten_password(self, login_page: LoginPage):
+        # Navigate to login page
+        login_page.navigate()
+        
+        # Click forgotten password link
+        login_page.click_forgotten_password()
+        
+        # Verify redirect to forgotten password page
+        expect(login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/forgotten")
+        
+    def test_go_to_register(self, login_page: LoginPage):
+        # Navigate to login page
+        login_page.navigate()
+        
+        # Click register/continue link
+        login_page.click_register()
+        
+        # Verify redirect to register page
+        expect(login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
 
 
 
