@@ -34,3 +34,7 @@ class NavbarHorizontal:
         my_account_option.hover()
         option_link = self.page.get_by_role("link", name=option, exact=True)
         option_link.click()
+
+    def click_shop_by_category(self, category):
+        self.page.get_by_role("button", name="Shop by category").click()
+        self.page.get_by_role("link", name=category, exact=True).click()
