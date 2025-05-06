@@ -13,6 +13,9 @@ class CartPanel:
 
     def is_visible(self):
         return self.page.is_visible(self.panel)
+    
+    def check_message(self, expected_message: str):
+        return self.page.inner_text(self.message) == expected_message
 
     def check_sub_total(self, expected_sub_total: str):
         return self.page.inner_text(self.sub_total) == expected_sub_total
