@@ -1,3 +1,4 @@
+import os
 import pytest
 from pages.login_page import LoginPage
 from playwright.sync_api import Page, expect
@@ -11,10 +12,12 @@ class TestLogin:
         # Navigate to login page
         login_page.navigate()
         
-        # Login with valid credentials
+        # Login with valid credentials from environment variables
+        email = os.getenv("VALID_EMAIL")
+        password = os.getenv("VALID_PASSWORD")
         login_page.login(
-            email="jose.lopez@gmail.com",
-            password="P@ssw0rd"
+            email=email,
+            password=password
         )
         
         # Verify successful login (redirected to account page)
@@ -28,7 +31,7 @@ class TestLogin:
         
         # Try to login with invalid credentials
         login_page.login(
-            email="invalid1@example.com",
+            email="invalid2@example.com",
             password="WrongPassword"
         )
         

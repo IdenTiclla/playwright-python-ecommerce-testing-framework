@@ -1,5 +1,9 @@
+from dotenv import load_dotenv
 import pytest
 from playwright.sync_api import sync_playwright
+
+
+load_dotenv()
 
 @pytest.fixture(scope="function")
 def browser():
