@@ -6,8 +6,8 @@ class CartPanel:
         self.panel = "div#cart-total-drawer"
         self.title = f"{self.panel} h5"
         self.message = f"{self.panel} p.text-center"
-        self.sub_total = f"{self.panel} table tr:nth-child(1) td.text-right"
-        self.total = f"{self.panel} table tr:nth-child(2) td.text-right"
+        self.sub_total = f"{self.panel} table:nth-child(2) tr:first-child td.text-right"
+        self.total = f"{self.panel} table:nth-child(2) tr:last-child td.text-right"
         self.edit_button = f"{self.panel} div div.design-button:nth-child(1) > a"
         self.checkout_button = f"{self.panel} div div.design-button:nth-child(2) > a"
 

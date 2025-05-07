@@ -3,6 +3,7 @@ from components.navbar_horizontal import NavbarHorizontal
 from playwright.sync_api import Page
 from components.carousel import Carousel
 from components.cart_panel import CartPanel
+from components.top_products import TopProducts
 
 class HomePage:
     URL = "https://ecommerce-playground.lambdatest.io/"
@@ -13,6 +14,7 @@ class HomePage:
         self.navbar_horizontal = NavbarHorizontal(page)
         self.carousel = Carousel(page)
         self.cart_panel = CartPanel(page)
+        self.top_products = TopProducts(page)
         self.compare_button = "div#main-header div.widget-search + div"
         self.wishlist_button = "div#main-header div.widget-search + div + div"
         self.cart_button = "div#main-header div.widget-search + div + div + div"

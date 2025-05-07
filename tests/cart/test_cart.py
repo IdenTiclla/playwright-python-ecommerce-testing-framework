@@ -50,3 +50,44 @@ class TestCart:
         assert home_page.cart_panel.check_message("Your shopping cart is empty!") == True
         assert home_page.cart_panel.check_sub_total("$0.00") == True
         assert home_page.cart_panel.check_total("$0.00") == True
+
+    def test_adding_product_to_cart_with_new_user(self, home_page, register_page, page):
+        home_page.goto()
+        home_page.navbar_horizontal.click_my_account_option("Register")
+        register_page.register(
+            firstname="Brayan",
+            lastname="Mendoza",
+            email="test.user" + str(int(time.time())) + "@example.com",
+            telephone="+1234567890",
+            password="Test@123",
+            subscribe_newsletter=True
+        )
+
+        home_page.goto()
+
+
+        
+        home_page.top_products.scroll_to_top_products() 
+        home_page.top_products.add_product_to_cart(0)
+        
+        # wait for 5 seconds
+        page.wait_for_timeout(5000)
+        
+        home_page.click_on_my_cart_button()        
+        # wait for 5 seconds
+        page.wait_for_timeout(5000)
+
+
+
+        # assert the cart panel is visible
+        assert home_page.cart_panel.is_visible(), "Cart panel should be visible"
+
+        # assert the cart panel message not exists in dom
+        assert not home_page.page.locator(home_page.cart_panel.message).is_visible(), "Cart panel message should not be visible"
+        
+        # assert the cart panel sub total is not $140.00
+        assert home_page.cart_panel.check_sub_total("$140.00") == True, "Sub total should be $140.00"
+        
+        # assert the cart panel total is not $170.00
+        assert home_page.cart_panel.check_total("$170.00") == True, "Total should be $170.00"
+    
