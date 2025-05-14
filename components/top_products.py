@@ -81,7 +81,7 @@ class TopProducts:
         product_card.hover()
 
         try:
-            quick_view_button.click(force=True)
+            quick_view_button.click()
             self.page.wait_for_load_state("networkidle", timeout=5000)
         except Exception as e:
             self.page.evaluate("(button) => button.click()", quick_view_button)

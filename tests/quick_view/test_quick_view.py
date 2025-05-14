@@ -28,6 +28,24 @@ class TestQuickView:
         home_page.quick_view_modal.close()
         expect(home_page.quick_view_modal.title).to_be_hidden(timeout=10000)
 
-        
+    def test_quick_view_many_times(self, home_page, page):
+        home_page.goto()
+        page.wait_for_timeout(1000)
+
+        home_page.top_products.scroll_to_top_products()
+        page.wait_for_timeout(1000)
+
+        expect(page.locator(home_page.top_products.section)).to_be_visible(timeout=10000)
+
+
+        for i in range(4):
+            print(f"Showing quick view {i+1}")
+            home_page.top_products.show_quick_view(index=i)
+            expect(home_page.quick_view_modal.modal).to_be_visible(timeout=10000)
+            home_page.quick_view_modal.close()
+            expect(home_page.quick_view_modal.modal).to_be_hidden(timeout=10000)
+            page.wait_for_timeout(1000)
+
+
 
 
