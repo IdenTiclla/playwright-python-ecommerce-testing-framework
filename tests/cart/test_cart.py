@@ -3,6 +3,7 @@ from pages.home_page import HomePage
 from pages.register_page import RegisterPage
 from playwright.sync_api import expect
 import pytest
+import re
 
 class TestCart:
     @pytest.fixture
@@ -52,42 +53,88 @@ class TestCart:
         assert home_page.cart_panel.check_total("$0.00") == True
 
     def test_adding_product_to_cart_with_new_user(self, home_page, register_page, page):
+        # Configuración: navegar a la página y esperar carga completa
         home_page.goto()
+        page.wait_for_load_state("networkidle")
+        
+        # Registro: navegar a la página de registro
         home_page.navbar_horizontal.click_my_account_option("Register")
+        page.wait_for_load_state("networkidle")
+        
+        # Crear un email único con timestamp para evitar conflictos
+        unique_email = f"test.user{int(time.time())}@example.com"
+        
+        # Completar registro con datos del usuario
         register_page.register(
             firstname="Brayan",
             lastname="Mendoza",
-            email="test.user" + str(int(time.time())) + "@example.com",
+            email=unique_email,
             telephone="+1234567890",
             password="Test@123",
             subscribe_newsletter=True
         )
-
+        
+        # Esperar a que se complete el registro completamente
+        page.wait_for_load_state("networkidle")
+        expect(page).to_have_url(re.compile(".*account/success"), timeout=10000)
+        
+        # Volver a la página principal de forma explícita
         home_page.goto()
+        page.wait_for_load_state("networkidle")
+        expect(page).to_have_title(re.compile("Your Store"), timeout=5000)
 
-
+        # try:
+        #     # Cerrar cualquier modal o popup que pueda interferir
+        #     if page.locator("button.mfp-close").is_visible():
+        #         page.locator("button.mfp-close").click()
+        # except:
+        #     # Ignorar errores si no hay modal para cerrar
+        #     pass
+            
+        # Asegurar que la sección de productos principales es visible
+        home_page.top_products.scroll_to_top_products()
+        page.wait_for_timeout(1000)  # Pequeña pausa para asegurar que la UI está estable
+        expect(page.locator(home_page.top_products.section)).to_be_visible(timeout=10000)
         
-        home_page.top_products.scroll_to_top_products() 
-        home_page.top_products.add_product_to_cart(0)
+        # Añadir el primer producto al carrito con manejo adecuado
+        try:
+            home_page.top_products.add_product_to_cart(index=0)
+            
+            # Esperar a la notificación de éxito (ajustar selector según la implementación real)
+            success_notification = page.locator(".alert-success, #notification-box-top, .toast-success")
+            if success_notification.count() > 0:
+                expect(success_notification.first).to_be_visible(timeout=5000)
+                page.wait_for_timeout(1000)  # Dar tiempo para que la animación termine
+        except Exception as e:
+            # Capturar una screenshot si falla para ayudar en el debugging
+            page.screenshot(path="error-add-to-cart.png")
+            raise e
         
-        # wait for 5 seconds
-        page.wait_for_timeout(5000)
+        # Verificar el carrito: hacer clic y verificar contenido
+        home_page.click_on_my_cart_button()
+        expect(page.locator(home_page.cart_panel.panel)).to_be_visible(timeout=5000)
         
-        home_page.click_on_my_cart_button()        
-        # wait for 5 seconds
-        page.wait_for_timeout(5000)
-
-
-
-        # assert the cart panel is visible
+        # Verificar que el panel del carrito está visible
         assert home_page.cart_panel.is_visible(), "Cart panel should be visible"
+        
+        # Verificar que NO muestra el mensaje de carrito vacío
+        expect(page.locator(home_page.cart_panel.message)).not_to_be_visible(timeout=3000)
+        
+        # Verificar contenido del carrito (usar soft assertions para ver todos los problemas)
+        sub_total_locator = page.locator(home_page.cart_panel.sub_total)
+        total_locator = page.locator(home_page.cart_panel.total)
+        
+        # Esperar a que se actualicen los valores con tiempos de espera adecuados
+        expect(sub_total_locator).to_be_visible(timeout=5000)
+        expect(total_locator).to_be_visible(timeout=5000)
+        
+        # Verificar que los valores no sean $0.00 (esto es mínimo, idealmente verificar valores exactos)
+        sub_total_text = sub_total_locator.text_content()
+        total_text = total_locator.text_content()
+        
+        assert "$0.00" not in sub_total_text, f"Sub total should not be $0.00, got: {sub_total_text}"
+        assert "$0.00" not in total_text, f"Total should not be $0.00, got: {total_text}"
+        
+        assert "$140.00" in sub_total_text, f"Sub total should be $140.00, got: {sub_total_text}"
+        assert "$170.00" in total_text, f"Total should be $170.00, got: {total_text}"
 
-        # assert the cart panel message not exists in dom
-        assert not home_page.page.locator(home_page.cart_panel.message).is_visible(), "Cart panel message should not be visible"
-        
-        # assert the cart panel sub total is not $140.00
-        assert home_page.cart_panel.check_sub_total("$140.00") == True, "Sub total should be $140.00"
-        
-        # assert the cart panel total is not $170.00
-        assert home_page.cart_panel.check_total("$170.00") == True, "Total should be $170.00"
-    

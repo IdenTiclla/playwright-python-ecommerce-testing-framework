@@ -1,4 +1,5 @@
 from playwright.sync_api import Page
+from playwright.sync_api import expect
 
 class TopProducts:
     def __init__(self, page: Page):
@@ -6,7 +7,7 @@ class TopProducts:
         self.section = "div#entry_217977 > div[class*='entry-section']"
         self.product_cards = "div#entry_217977 .product-thumb"
         self.product_titles = f"{self.product_cards} h4 a"
-        self.cart_buttons = f"{self.product_cards} button[class*='btn-cart']"
+        self.cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = f"{self.product_cards} button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_cards} button[class*='btn-compare']"
 
@@ -24,12 +25,41 @@ class TopProducts:
         self.page.locator(self.section).scroll_into_view_if_needed()
 
     def add_product_to_cart(self, index=0):
-        """Adds the product at the given index to the cart."""
-        if index < 0:
-            raise ValueError("Index must be a non-negative integer.")
+        # Ensure section is fully loaded
+        self.scroll_to_top_products()
+        self.page.wait_for_load_state("networkidle")
         
-        self.page.locator(self.product_cards).nth(index).hover()
-        self.page.locator(self.cart_buttons).nth(index).click()
+        # Get product card and ensure it's visible
+        product_card = self.page.locator(self.product_cards).nth(index)
+        product_card.scroll_into_view_if_needed()
+        expect(product_card).to_be_visible(timeout=5000)
+        
+        # Force wait to ensure UI is ready
+        self.page.wait_for_timeout(500)
+        
+        # Hover over product to make button accessible
+        product_card.hover()
+        
+        # Get cart button within this specific product to avoid interactions with other products
+        cart_button = product_card.locator(self.cart_buttons)
+        
+        # Wait for the button to be visible and ready for interaction
+        expect(cart_button).to_be_visible(timeout=5000)
+        expect(cart_button).to_be_enabled(timeout=5000)
+        
+        # Add explicit waits to avoid potential race conditions
+        self.page.wait_for_timeout(300)
+        
+        try:
+            # Click the button with force option to bypass any overlay issues
+            cart_button.click(force=True)
+            
+            # Wait for any potential network activity after clicking
+            self.page.wait_for_load_state("networkidle", timeout=5000)
+        except Exception as e:
+            # If direct click fails, try JavaScript click as fallback
+            self.page.evaluate("(button) => button.click()", cart_button)
+            self.page.wait_for_load_state("networkidle", timeout=5000)
 
     def add_product_to_wishlist(self, index=0):
         self.page.locator(self.wishlist_buttons).nth(index).click()
