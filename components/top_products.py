@@ -10,6 +10,7 @@ class TopProducts:
         self.cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = f"{self.product_cards} button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_cards} button[class*='btn-compare']"
+        self.quick_view_buttons = "button[class*='quick-view']"
 
     def is_visible(self):
         return self.page.locator(self.section).is_visible()
@@ -63,6 +64,28 @@ class TopProducts:
 
     def add_product_to_wishlist(self, index=0):
         self.page.locator(self.wishlist_buttons).nth(index).click()
+
+    def show_quick_view(self, index=0):
+        self.scroll_to_top_products()
+        self.page.wait_for_load_state("networkidle")
+
+        product_card = self.page.locator(self.product_cards).nth(index)
+        expect(product_card).to_be_visible(timeout=5000)
+
+        quick_view_button = product_card.locator(self.quick_view_buttons)    
+        expect(quick_view_button).to_be_visible(timeout=5000)
+        expect(quick_view_button).to_be_enabled(timeout=5000)
+
+        # Add explicit waits to avoid potential race conditions
+        self.page.wait_for_timeout(500)
+        product_card.hover()
+
+        try:
+            quick_view_button.click(force=True)
+            self.page.wait_for_load_state("networkidle", timeout=5000)
+        except Exception as e:
+            self.page.evaluate("(button) => button.click()", quick_view_button)
+            self.page.wait_for_load_state("networkidle", timeout=5000)
 
     def add_product_to_compare(self, index=0):
         self.page.locator(self.compare_buttons).nth(index).click()
