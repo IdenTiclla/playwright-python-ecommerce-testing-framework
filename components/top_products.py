@@ -8,7 +8,7 @@ class TopProducts:
         self.product_cards = "div#entry_217977 .product-thumb"
         self.product_titles = f"{self.product_cards} h4 a"
         self.cart_buttons = "button[class*='btn-cart']"
-        self.wishlist_buttons = f"{self.product_cards} button[class*='btn-wishlist']"
+        self.wishlist_buttons = "button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_cards} button[class*='btn-compare']"
         self.quick_view_buttons = "button[class*='quick-view']"
 
@@ -63,8 +63,27 @@ class TopProducts:
             self.page.wait_for_load_state("networkidle", timeout=5000)
 
     def add_product_to_wishlist(self, index=0):
-        self.page.locator(self.wishlist_buttons).nth(index).click()
+        # self.page.locator(self.wishlist_buttons).nth(index).click()
+        self.scroll_to_top_products()
+        self.page.wait_for_load_state("networkidle")
 
+        product_card = self.page.locator(self.product_cards).nth(index)
+        expect(product_card).to_be_visible(timeout=5000)
+
+        wishlist_button = product_card.locator(self.wishlist_buttons)
+        expect(wishlist_button).to_be_visible(timeout=5000)
+        expect(wishlist_button).to_be_enabled(timeout=5000)
+
+        self.page.wait_for_timeout(500)
+        product_card.hover()
+
+        try:
+            wishlist_button.click()
+            self.page.wait_for_load_state("networkidle", timeout=5000)
+        except Exception as e:
+            self.page.evaluate("(button) => button.click()", wishlist_button)
+            self.page.wait_for_load_state("networkidle", timeout=5000)
+            
     def show_quick_view(self, index=0):
         self.scroll_to_top_products()
         self.page.wait_for_load_state("networkidle")

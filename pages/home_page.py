@@ -5,7 +5,7 @@ from components.carousel import Carousel
 from components.cart_panel import CartPanel
 from components.top_products import TopProducts
 from components.quick_view_modal import QuickViewModal
-
+from components.notification import Notification
 class HomePage:
     URL = "https://ecommerce-playground.lambdatest.io/"
 
@@ -16,7 +16,8 @@ class HomePage:
         self.carousel = Carousel(page)
         self.cart_panel = CartPanel(page)
         self.top_products = TopProducts(page)
-        self.quick_view_modal = QuickViewModal(page)    
+        self.quick_view_modal = QuickViewModal(page)
+        self.notification = Notification(page)
         self.compare_button = "div#main-header div.widget-search + div"
         self.wishlist_button = "div#main-header div.widget-search + div + div"
         self.cart_button = "div#main-header div.widget-search + div + div + div"
