@@ -9,6 +9,8 @@ class Notification:
         self.message = f"{self.container} div[class*='toast-body'] p"
         self.login_button = f"{self.container} div[class*='toast-body'] div[class='form-row'] a[href*='login']"
         self.register_button = f"{self.container} div[class*='toast-body'] div[class='form-row'] a[href*='register']"
+        self.view_cart_button = f"{self.container} div[class*='toast-body'] div[class='form-row'] a[href*='checkout/cart']"
+        self.checkout_button = f"{self.container} div[class*='toast-body'] div[class='form-row'] a[href*='checkout/checkout']"
         
     def close(self):
         self.page.locator(self.close_button).click()

@@ -97,18 +97,35 @@ class TestCart:
         expect(page.locator(home_page.top_products.section)).to_be_visible(timeout=10000)
         
         # Añadir el primer producto al carrito con manejo adecuado
-        try:
-            home_page.top_products.add_product_to_cart(index=0)
+        home_page.top_products.add_product_to_cart(index=0)
+        
+        # Esperar a la notificación de éxito (ajustar selector según la implementación real)
+        notification = page.locator(home_page.notification.container)
+        expect(notification).to_be_visible(timeout=5000)
+
+        # verificar el mensaje de notificación
+        message = home_page.notification.get_message_text()
+        # assert message == "Success: You have added MacBook Pro to your shopping cart!", "Message should be 'Success: You have added MacBook Pro to your shopping cart!'"
+        assert "Success" in message, "Message should contain 'Success'"
+        assert message == "Success: You have added iMac to your shopping cart!", "Message should be 'Success: You have added iMac to your shopping cart!'"
+
+
+
+        view_cart_button = page.locator(home_page.notification.view_cart_button)
+        expect(view_cart_button).to_be_visible(timeout=5000)
+
+
+        checkout_button = page.locator(home_page.notification.checkout_button)
+        expect(checkout_button).to_be_visible(timeout=5000)
+
+
+        # Cerrar la notificación
+        close_button = page.locator(home_page.notification.close_button)
+        expect(close_button).to_be_visible(timeout=5000)
+        close_button.click()
+        expect(notification).not_to_be_visible(timeout=5000)
+
             
-            # Esperar a la notificación de éxito (ajustar selector según la implementación real)
-            success_notification = page.locator(".alert-success, #notification-box-top, .toast-success")
-            if success_notification.count() > 0:
-                expect(success_notification.first).to_be_visible(timeout=5000)
-                page.wait_for_timeout(1000)  # Dar tiempo para que la animación termine
-        except Exception as e:
-            # Capturar una screenshot si falla para ayudar en el debugging
-            page.screenshot(path="error-add-to-cart.png")
-            raise e
         
         # Verificar el carrito: hacer clic y verificar contenido
         home_page.click_on_my_cart_button()
