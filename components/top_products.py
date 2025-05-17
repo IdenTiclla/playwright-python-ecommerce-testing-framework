@@ -89,15 +89,18 @@ class TopProducts:
         self.page.wait_for_load_state("networkidle")
 
         product_card = self.page.locator(self.product_cards).nth(index)
+        product_card.scroll_into_view_if_needed()
         expect(product_card).to_be_visible(timeout=5000)
+
+        # Add explicit waits to avoid potential race conditions
+        self.page.wait_for_timeout(500)
+        product_card.hover()
 
         quick_view_button = product_card.locator(self.quick_view_buttons)    
         expect(quick_view_button).to_be_visible(timeout=5000)
         expect(quick_view_button).to_be_enabled(timeout=5000)
 
-        # Add explicit waits to avoid potential race conditions
         self.page.wait_for_timeout(500)
-        product_card.hover()
 
         try:
             quick_view_button.click()

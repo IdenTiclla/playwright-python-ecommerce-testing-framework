@@ -17,16 +17,17 @@ class TestQuickView:
         home_page.top_products.show_quick_view(index=0)
 
         page.wait_for_timeout(1000)
+        quick_view_modal = home_page.quick_view_modal
 
-        expect(home_page.quick_view_modal.title).to_be_visible(timeout=10000)
-        assert home_page.quick_view_modal.get_title() == "iMac"
-        expect(home_page.quick_view_modal.title).to_contain_text("iMac")
+        expect(page.locator(quick_view_modal.title)).to_be_visible(timeout=10000)
+        expect(page.locator(quick_view_modal.title)).to_contain_text("iMac")
+        assert quick_view_modal.get_title() == "iMac"
 
-        expect(home_page.quick_view_modal.availability).to_be_visible(timeout=10000)
-        expect(home_page.quick_view_modal.availability).to_contain_text("Out Of Stock")
+        expect(page.locator(quick_view_modal.availability)).to_be_visible(timeout=10000)
+        expect(page.locator(quick_view_modal.availability)).to_contain_text("Out Of Stock")
 
-        home_page.quick_view_modal.close()
-        expect(home_page.quick_view_modal.title).to_be_hidden(timeout=10000)
+        quick_view_modal.close()
+        expect(page.locator(quick_view_modal.container)).to_be_hidden(timeout=10000)
 
     def test_quick_view_many_times(self, home_page, page):
         home_page.goto()
@@ -41,9 +42,10 @@ class TestQuickView:
         for i in range(4):
             print(f"Showing quick view {i+1}")
             home_page.top_products.show_quick_view(index=i)
-            expect(home_page.quick_view_modal.modal).to_be_visible(timeout=10000)
-            home_page.quick_view_modal.close()
-            expect(home_page.quick_view_modal.modal).to_be_hidden(timeout=10000)
+            quick_view_modal = home_page.quick_view_modal
+            expect(page.locator(quick_view_modal.container)).to_be_visible(timeout=10000)
+            quick_view_modal.close()
+            expect(page.locator(quick_view_modal.container)).to_be_hidden(timeout=10000)
             page.wait_for_timeout(1000)
 
 
