@@ -7,7 +7,7 @@ class TestQuickView:
     def home_page(self, page) -> HomePage:
         return HomePage(page)
     
-    def test_quick_view(self, home_page, page):
+    def test_quick_view_with_out_of_stock_product(self, home_page, page):
         home_page.goto()
         home_page.top_products.scroll_to_top_products()
         page.wait_for_timeout(1000)
@@ -28,6 +28,11 @@ class TestQuickView:
 
         quick_view_modal.close()
         expect(page.locator(quick_view_modal.container)).to_be_hidden(timeout=10000)
+
+        add_to_cart_button_text = quick_view_modal.get_add_to_cart_button_text()
+        buy_now_button_text = quick_view_modal.get_buy_now_button_text()
+        assert add_to_cart_button_text == "Out Of Stock", "Add to Cart button text should be 'Out Of Stock'"
+        assert buy_now_button_text == "Out Of Stock", "Buy Now button text should be 'Out Of Stock'"
 
     def test_quick_view_many_times(self, home_page, page):
         home_page.goto()

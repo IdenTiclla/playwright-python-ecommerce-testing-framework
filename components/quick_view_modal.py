@@ -42,6 +42,13 @@ class QuickViewModal():
     
     def add_to_wishlist(self):
         self.page.locator(self.wishlist_button).click()
+
+    def get_add_to_cart_button_text(self):
+        return self.page.locator(self.add_to_cart_button).text_content()
+    
+    def get_buy_now_button_text(self):
+        return self.page.locator(self.buy_now_button).text_content()
+    
     
     def close(self):
         self.page.locator(self.close_button).click()
