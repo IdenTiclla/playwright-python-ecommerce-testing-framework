@@ -1,7 +1,7 @@
 from playwright.sync_api import Page
 from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
-
+from components.alert import Alert
 
 class WishlistPage:
     URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/wishlist"
@@ -10,6 +10,7 @@ class WishlistPage:
         self.page = page
         self.navbar_horizontal = NavbarHorizontal(page)
         self.search_bar = SearchBar(page)
+        self.alert = Alert(page)
         
         # Page elements
         self.page_title = "h1"

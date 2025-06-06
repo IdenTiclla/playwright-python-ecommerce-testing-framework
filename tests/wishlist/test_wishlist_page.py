@@ -199,8 +199,8 @@ class TestWishlistPage:
         """Test removing a product from wishlist"""
         # Setup: Login and ensure product in wishlist
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
         # Add product to wishlist first
         home_page.goto()
@@ -220,6 +220,12 @@ class TestWishlistPage:
         # Remove first product
         wishlist_page.remove_from_wishlist(0)
         page.wait_for_timeout(2000)
+
+        # Verify alert is visible
+        assert wishlist_page.alert.is_visible(), "Alert should be visible"
+        assert "Success: You have modified your wish list!" in wishlist_page.alert.get_text(), "Alert text should be 'Success: You have modified your wish list!'"
+        alert_text = wishlist_page.alert.get_text()
+        print(alert_text)
         
         # Verify product was removed
         new_count = wishlist_page.get_wishlist_items_count()
