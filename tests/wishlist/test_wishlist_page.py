@@ -121,11 +121,13 @@ class TestWishlistPage:
         page.wait_for_timeout(1000)
         
         # Navigate to login page
-        home_page.click_on_login()
+        home_page.navbar_horizontal.click_my_account_option("Login")
         page.wait_for_timeout(1000)
+
+        home_page.navbar_horizontal.click_my_account_option("Login")
         
         # Login with test credentials (assuming these exist or we create them)
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         page.wait_for_timeout(2000)
         
         # Go to home page and add product to wishlist
@@ -151,9 +153,20 @@ class TestWishlistPage:
         
         # Get product details
         product_details = wishlist_page.get_product_details(0)
+        assert product_details["image_src"], "Product image should not be empty"
         assert product_details["product_name"], "Product name should not be empty"
-        assert product_details["price"], "Product price should not be empty"
         assert product_details["model"], "Product model should not be empty"
+        assert product_details["stock_status"], "Product stock status should not be empty"
+        assert product_details["price"], "Product price should not be empty"
+
+        # logs
+        print(product_details)
+        
+        assert product_details["image_src"] == "https://ecommerce-playground.lambdatest.io/image/cache/catalog/maza/demo/mz_poco/megastore-2/product/10-47x47.webp", "Product image should be the same as the one in the wishlist"
+        assert product_details["product_name"] == "iMac", "Product name should be the same as the one in the wishlist"
+        assert product_details["model"] == "Product 14", "Product model should be the same as the one in the wishlist"
+        assert product_details["stock_status"] == "Out Of Stock", "Product stock status should be the same as the one in the wishlist"
+        assert product_details["price"] == "$170.00", "Product price should be the same as the one in the wishlist"
 
     def test_wishlist_product_details_display(self, wishlist_page, home_page, login_page, page):
         """Test that product details are correctly displayed in wishlist"""

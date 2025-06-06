@@ -17,7 +17,7 @@ class WishlistPage:
         self.breadcrumb = "nav[aria-label='breadcrumb']"
         self.wishlist_table = "table"
         self.table_headers = "thead tr th"
-        self.table_rows = "tbody tr"
+        self.table_rows = "div#content tbody tr"
         self.continue_button = "a.btn.btn-primary"
         
         # Table column selectors
