@@ -47,13 +47,16 @@ class TestWishlistPage:
         current_url = wishlist_page.page.url
         assert "account/login" in current_url, f"Expected 'account/login' in URL, got: {current_url}"
 
-    def test_wishlist_page_with_logged_user_and_no_products(self, wishlist_page, home_page, login_page, page):
-        """Test wishlist page with logged user and no products"""
+    def test_wishlist_page_with_new_user_account_and_no_products(self, wishlist_page, home_page, register_page, page):
+        """Test wishlist page with new user account and no products"""
         home_page.goto()
-        home_page.navbar_horizontal.click_my_account_option("Login")
-        email = os.getenv("VALID_EMAIL")
-        password = os.getenv("VALID_PASSWORD")
-        login_page.login(email, password)
+        home_page.navbar_horizontal.click_my_account_option("Register")
+        random_firstname = f"John{random.randint(1, 1000000)}"
+        random_lastname = f"Doe{random.randint(1, 1000000)}"
+        random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
+        random_telephone = f"1234567890{random.randint(1, 1000000)}"
+        random_password = "TestPassword123!"
+        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, subscribe_newsletter=False)
         
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
