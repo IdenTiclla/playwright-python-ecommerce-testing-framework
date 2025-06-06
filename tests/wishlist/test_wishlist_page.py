@@ -168,41 +168,14 @@ class TestWishlistPage:
         assert product_details["stock_status"] == "Out Of Stock", "Product stock status should be the same as the one in the wishlist"
         assert product_details["price"] == "$170.00", "Product price should be the same as the one in the wishlist"
 
-    def test_wishlist_product_details_display(self, wishlist_page, home_page, login_page, page):
-        """Test that product details are correctly displayed in wishlist"""
-        # Setup: Login and add product to wishlist
-        home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
-        
-        # Navigate to wishlist
-        wishlist_page.goto()
-        wishlist_page.wait_for_page_load()
-        
-        # Skip if no items in wishlist
-        if wishlist_page.get_wishlist_items_count() == 0:
-            pytest.skip("No items in wishlist to test")
-        
-        # Test product details
-        product_details = wishlist_page.get_product_details(0)
-        
-        # Verify all required fields are present
-        assert product_details["product_name"], "Product name should be present"
-        assert product_details["model"], "Product model should be present"
-        assert product_details["stock_status"], "Stock status should be present"
-        assert product_details["price"], "Product price should be present"
-        assert product_details["image_src"], "Product image should be present"
-        
-        # Verify price format
-        price = product_details["price"]
-        assert "$" in price, f"Price should contain '$' symbol, got: {price}"
+        assert "$" in product_details["price"], "Product price should contain $ symbol"
 
     def test_wishlist_product_navigation(self, wishlist_page, home_page, login_page, page):
         """Test navigation from wishlist to product page"""
         # Setup: Login and ensure product in wishlist
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
