@@ -310,9 +310,20 @@ class TestWishlistPage:
         """Test wishlist when it's empty"""
         # Setup: Login first
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.wait_for_page_load()
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
+        # add a product to wishlist
+        home_page.goto()
+        home_page.top_products.add_product_to_wishlist(index=0)
+        page.wait_for_timeout(2000)
+
+        # add another product to wishlist
+        home_page.goto()
+        home_page.top_products.add_product_to_wishlist(index=1)
+        page.wait_for_timeout(2000)
+
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
@@ -320,12 +331,16 @@ class TestWishlistPage:
         while wishlist_page.get_wishlist_items_count() > 0:
             wishlist_page.remove_from_wishlist(0)
             page.wait_for_timeout(1000)
-            wishlist_page.page.reload()
+            wishlist_page.goto()
             wishlist_page.wait_for_page_load()
         
         # Verify empty state
         items_count = wishlist_page.get_wishlist_items_count()
         assert items_count == 0, "Wishlist should be empty"
+
+        # Verify no results message
+        no_results_message = wishlist_page.get_no_results_message()
+        assert "No results!" in no_results_message, f"Expected 'No results!' in no results message, got: {no_results_message}"
 
     def test_wishlist_page_responsive_elements(self, wishlist_page, page):
         """Test that wishlist page elements are responsive"""

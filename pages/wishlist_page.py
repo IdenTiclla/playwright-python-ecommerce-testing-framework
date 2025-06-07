@@ -116,6 +116,10 @@ class WishlistPage:
         row = self.page.locator(self.table_rows).nth(row_index)
         button = row.locator(self.add_to_cart_button)
         return button.is_enabled() if button.is_visible() else False
+    
+    def get_no_results_message(self) -> str:
+        """Get the no results message"""
+        return self.page.locator(self.no_results_message).text_content().strip()
 
 
     def wait_for_page_load(self):
