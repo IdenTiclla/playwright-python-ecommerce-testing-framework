@@ -291,8 +291,9 @@ class TestWishlistPage:
         """Test that stock status is correctly displayed"""
         # Setup: Login and ensure product in wishlist
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.wait_for_page_load()
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
@@ -303,6 +304,7 @@ class TestWishlistPage:
         # Check stock status
         stock_status = wishlist_page.get_stock_status(0)
         assert stock_status in ["In Stock", "Out Of Stock", "Pre-Order"], f"Unexpected stock status: {stock_status}"
+        assert stock_status == "Out Of Stock", f"Expected 'Out Of Stock' stock status, got {stock_status}"
 
     def test_wishlist_empty_state(self, wishlist_page, home_page, login_page, page):
         """Test wishlist when it's empty"""
