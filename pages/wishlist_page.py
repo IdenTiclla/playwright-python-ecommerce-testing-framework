@@ -21,7 +21,7 @@ class WishlistPage:
         self.wishlist_table = "table"
         self.table_headers = "thead tr th"
         self.table_rows = "div#content tbody tr"
-        self.continue_button = "a.btn.btn-primary"
+        self.continue_button = "div#content a.btn.btn-primary"
         
         # Table column selectors
         self.product_image_column = "td:nth-child(1)"
@@ -117,30 +117,6 @@ class WishlistPage:
         button = row.locator(self.add_to_cart_button)
         return button.is_enabled() if button.is_visible() else False
 
-    # Sidebar navigation methods
-    def click_my_account(self):
-        """Navigate to My Account page"""
-        self.page.locator(self.my_account_link).click()
-
-    def click_edit_account(self):
-        """Navigate to Edit Account page"""
-        self.page.locator(self.edit_account_link).click()
-
-    def click_password(self):
-        """Navigate to Password page"""
-        self.page.locator(self.password_link).click()
-
-    def click_address_book(self):
-        """Navigate to Address Book page"""
-        self.page.locator(self.address_book_link).click()
-
-    def click_order_history(self):
-        """Navigate to Order History page"""
-        self.page.locator(self.order_history_link).click()
-
-    def logout(self):
-        """Logout from the account"""
-        self.page.locator(self.logout_link).click()
 
     def wait_for_page_load(self):
         """Wait for the wishlist page to fully load"""

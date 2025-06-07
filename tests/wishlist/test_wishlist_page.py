@@ -5,6 +5,7 @@ from pages.wishlist_page import WishlistPage
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from pages.register_page import RegisterPage
+from pages.account_page import AccountPage
 import random
 
 # Load environment variables from .env file
@@ -33,6 +34,10 @@ class TestWishlistPage:
     @pytest.fixture
     def register_page(self, page) -> RegisterPage:
         return RegisterPage(page)
+    
+    @pytest.fixture
+    def account_page(self, page) -> AccountPage:
+        return AccountPage(page)
 
     def test_wishlist_page_navigation_without_logged_user(self, wishlist_page):
         """Test direct navigation to wishlist page"""
@@ -261,22 +266,26 @@ class TestWishlistPage:
         page.wait_for_timeout(1000)
         assert "account/edit" in page.url, "Should navigate to Edit Account page"
 
-    def test_continue_button_functionality(self, wishlist_page, home_page, login_page, page):
+    def test_continue_button_functionality(self, wishlist_page, home_page, login_page, account_page, page):
         """Test the Continue button functionality"""
         # Setup: Login first
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.wait_for_page_load()
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
         # Click continue button
         wishlist_page.click_continue()
-        page.wait_for_timeout(1000)
+        wishlist_page.wait_for_page_load()
         
         # Verify navigation to account page
         assert "account/account" in page.url, "Continue button should navigate to My Account page"
+        account_page.wait_for_page_load()
+        quantity_of_sidebar_links = account_page.sidebar_navigation.get_quantity_of_sidebar_links()
+        assert quantity_of_sidebar_links == 14, f"Expected 14 sidebar links, got {quantity_of_sidebar_links}"
 
     def test_wishlist_stock_status_display(self, wishlist_page, home_page, login_page, page):
         """Test that stock status is correctly displayed"""
