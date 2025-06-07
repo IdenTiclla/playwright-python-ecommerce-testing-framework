@@ -1,9 +1,17 @@
 from playwright.sync_api import Page
+from components.navbar_horizontal import NavbarHorizontal
+from components.sidebar_navigation import SidebarNavigation
+from components.alert import Alert
+from components.search_bar import SearchBar
 
 class LoginPage:
     def __init__(self, page: Page):
         self.page = page
-        
+        # Components
+        self.search_bar = SearchBar(page)
+        self.navbar_horizontal = NavbarHorizontal(page)
+        self.sidebar_navigation = SidebarNavigation(page)
+        self.alert = Alert(page)
         # URLs
         self.login_url = "https://ecommerce-playground.lambdatest.io/index.php?route=account/login"
         
@@ -31,3 +39,7 @@ class LoginPage:
     def click_register(self):
         """Click on register/continue link"""
         self.page.click(self.register_link)
+
+    def wait_for_page_load(self):
+        """Wait for the login page to fully load"""
+        self.page.wait_for_load_state("domcontentloaded")

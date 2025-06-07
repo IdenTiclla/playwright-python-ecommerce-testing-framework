@@ -235,14 +235,20 @@ class TestWishlistPage:
         """Test sidebar navigation links"""
         # Setup: Login first
         home_page.goto()
-        home_page.click_on_login()
-        login_page.login("john.doe.test@example.com", "TestPassword123!")
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.wait_for_page_load()
+        quantity_of_sidebar_links = login_page.sidebar_navigation.get_quantity_of_sidebar_links()
+        assert quantity_of_sidebar_links == 13, f"Expected 13 sidebar links, got {quantity_of_sidebar_links}"
+        login_page.login("test@qwertest.com", "P@ssw0rd")
         
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
+        quantity_of_sidebar_links = wishlist_page.sidebar_navigation.get_quantity_of_sidebar_links()
+        assert quantity_of_sidebar_links == 14, f"Expected 14 sidebar links, got {quantity_of_sidebar_links}"
+
         # Test My Account navigation
-        wishlist_page.click_my_account()
+        wishlist_page.sidebar_navigation.click_my_account_option()
         page.wait_for_timeout(1000)
         assert "account/account" in page.url, "Should navigate to My Account page"
         
@@ -251,7 +257,7 @@ class TestWishlistPage:
         wishlist_page.wait_for_page_load()
         
         # Test Edit Account navigation
-        wishlist_page.click_edit_account()
+        wishlist_page.sidebar_navigation.click_edit_account_option()
         page.wait_for_timeout(1000)
         assert "account/edit" in page.url, "Should navigate to Edit Account page"
 

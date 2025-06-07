@@ -2,6 +2,7 @@ from playwright.sync_api import Page
 from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
 from components.alert import Alert
+from components.sidebar_navigation import SidebarNavigation
 
 class WishlistPage:
     URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/wishlist"
@@ -11,6 +12,7 @@ class WishlistPage:
         self.navbar_horizontal = NavbarHorizontal(page)
         self.search_bar = SearchBar(page)
         self.alert = Alert(page)
+        self.sidebar_navigation = SidebarNavigation(page)
         
         # Page elements
         self.page_title = "h1"
@@ -32,17 +34,6 @@ class WishlistPage:
         # Action buttons in table
         self.add_to_cart_button = "button[title='Add to Cart']"
         self.remove_from_wishlist_button = "a[title='Remove']"
-        
-        # Sidebar navigation
-        self.sidebar = "aside"
-        self.sidebar_links = "aside a"
-        self.my_account_link = "a[href*='account/account']"
-        self.edit_account_link = "a[href*='account/edit']"
-        self.password_link = "a[href*='account/password']"
-        self.address_book_link = "a[href*='account/address']"
-        self.wishlist_link = "a[href*='account/wishlist']"
-        self.order_history_link = "a[href*='account/order']"
-        self.logout_link = "a[href*='account/logout']"
 
     def goto(self):
         """Navigate to the wishlist page"""
