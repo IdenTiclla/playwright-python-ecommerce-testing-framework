@@ -18,7 +18,7 @@ class WishlistPage:
         self.page_title = "h1"
         self.no_results_message = "h1 + p"
         self.breadcrumb = "nav[aria-label='breadcrumb']"
-        self.wishlist_table = "table"
+        self.wishlist_table = "div#content table"
         self.table_headers = "thead tr th"
         self.table_rows = "div#content tbody tr"
         self.continue_button = "div#content a.btn.btn-primary"
@@ -125,4 +125,8 @@ class WishlistPage:
     def wait_for_page_load(self):
         """Wait for the wishlist page to fully load"""
         self.page.wait_for_load_state("domcontentloaded")
-        # self.page.locator(self.page_title).wait_for(state="visible") 
+        # self.page.locator(self.page_title).wait_for(state="visible")
+
+    def get_page_title(self) -> str:
+        """Get the page title"""
+        return self.page.locator(self.page_title).text_content().strip()

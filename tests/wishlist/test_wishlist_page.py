@@ -342,8 +342,19 @@ class TestWishlistPage:
         no_results_message = wishlist_page.get_no_results_message()
         assert "No results!" in no_results_message, f"Expected 'No results!' in no results message, got: {no_results_message}"
 
-    def test_wishlist_page_responsive_elements(self, wishlist_page, page):
+    def test_wishlist_page_responsive_elements(self, wishlist_page, page, home_page, login_page):
         """Test that wishlist page elements are responsive"""
+        # login a user
+        home_page.goto()
+        home_page.navbar_horizontal.click_my_account_option("Login")
+        login_page.wait_for_page_load()
+        login_page.login("test@qwertest.com", "P@ssw0rd")
+
+        # add a product to wishlist
+        home_page.goto()
+        home_page.top_products.add_product_to_wishlist(index=0)
+        page.wait_for_timeout(2000)
+
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
