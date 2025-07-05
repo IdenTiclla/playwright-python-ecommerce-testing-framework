@@ -24,6 +24,7 @@ class TestCart:
             email="test.user" + str(int(time.time())) + "@example.com",
             telephone="+1234567890",
             password="Test@123",
+            password_confirm="Test@123",  # Same password for confirmation
             subscribe_newsletter=True
         )
         # assert cart panel is not visible 
@@ -71,6 +72,7 @@ class TestCart:
             email=unique_email,
             telephone="+1234567890",
             password="Test@123",
+            password_confirm="Test@123",  # Mismo password para confirmación
             subscribe_newsletter=True
         )
         

@@ -19,6 +19,7 @@ class TestRegister:
             email="test.user" + str(int(time.time())) + "@example.com",
             telephone="+1234567890",
             password="Test@123",
+            password_confirm="Test@123",  # Same password for confirmation
             subscribe_newsletter=True
         )
         
@@ -54,3 +55,24 @@ class TestRegister:
         
         # Verify redirect to login page
         expect(register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
+
+    def test_password_confirmation_mismatch(self, register_page: RegisterPage):
+        # Navigate to register page
+        register_page.navigate()
+        
+        # Fill in registration form with mismatched passwords
+        register_page.register(
+            firstname="Test",
+            lastname="User",
+            email="test.user" + str(int(time.time())) + "@example.com",
+            telephone="+1234567890",
+            password="Test@123",
+            password_confirm="Test@456",  # Mismatched password
+            subscribe_newsletter=True
+        )
+
+        # Verify that the error message is visible
+        assert register_page.password_error_visible(), "Password confirmation error message should be visible"
+        # Verify the text of the error message
+        password_error_text = register_page.get_password_error_text()
+        assert password_error_text == "Password confirmation does not match password!", f"Expected error message to be 'Password confirmation does not match password!', but got '{password_error_text}'"

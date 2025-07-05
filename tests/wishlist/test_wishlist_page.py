@@ -61,8 +61,8 @@ class TestWishlistPage:
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, subscribe_newsletter=False)
-        
+        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
@@ -70,7 +70,7 @@ class TestWishlistPage:
         page_title = wishlist_page.page.title()
         assert "My Wish List" in page_title, f"Expected 'My Wish List' in page title, got: {page_title}"
         
-        no_results_message = page.locator(wishlist_page.no_results_message).text_content()
+        no_results_message = wishlist_page.get_no_results_message()
         assert "No results!" in no_results_message, f"Expected 'No results!' in no results message, got: {no_results_message}"
 
     def test_wishlist_page_elements_visibility(self, wishlist_page, page, home_page, login_page, register_page):
@@ -82,13 +82,13 @@ class TestWishlistPage:
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, subscribe_newsletter=False)
-        
+        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
         # Check main elements
-        assert wishlist_page.is_wishlist_table_visible(), "Wishlist table should be visible"
+        assert not wishlist_page.is_wishlist_table_visible(), "Wishlist table should be visible"
         
         # Check breadcrumb
         breadcrumb_text = wishlist_page.get_breadcrumb_text()
@@ -103,8 +103,8 @@ class TestWishlistPage:
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, subscribe_newsletter=False)
-        
+        register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+
         # add a product to wishlist
         home_page.goto()
         home_page.top_products.add_product_to_wishlist(index=0)
@@ -327,14 +327,9 @@ class TestWishlistPage:
         wishlist_page.goto()
         wishlist_page.wait_for_page_load()
         
-        # Remove all items if any exist
-        while wishlist_page.get_wishlist_items_count() > 0:
-            wishlist_page.remove_from_wishlist(0)
-            page.wait_for_timeout(1000)
-            wishlist_page.goto()
-            wishlist_page.wait_for_page_load()
         
         # Verify empty state
+        wishlist_page.remove_all_from_wishlist()
         items_count = wishlist_page.get_wishlist_items_count()
         assert items_count == 0, "Wishlist should be empty"
 

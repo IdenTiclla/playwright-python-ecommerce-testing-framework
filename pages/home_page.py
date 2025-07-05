@@ -18,9 +18,9 @@ class HomePage:
         self.top_products = TopProducts(page)
         self.quick_view_modal = QuickViewModal(page)
         self.notification = Notification(page)
-        self.compare_button = "div#main-header div.widget-search + div"
-        self.wishlist_button = "div#main-header div.widget-search + div + div"
-        self.cart_button = "div#main-header div.widget-search + div + div + div"
+        self.compare_button = page.locator("div#main-header div.widget-search + div")
+        self.wishlist_button = page.locator("div#main-header div.widget-search + div + div")
+        self.cart_button = page.locator("div#main-header div.widget-search + div + div + div")
 
 
     def goto(self):
@@ -29,11 +29,11 @@ class HomePage:
     def search(self, term):
         self.search_bar.search(term)
 
-    def click_on_my_account(self):
-        self.page.click("#my_account")
+    def click_on_compare_button(self):
+        self.compare_button.click()
 
-    def click_on_login(self):
-        self.page.click("#login")
+    def click_on_wishlist_button(self):
+        self.wishlist_button.click()
 
     def click_on_my_cart_button(self):
-        self.page.click(self.cart_button)
+        self.cart_button.click()
