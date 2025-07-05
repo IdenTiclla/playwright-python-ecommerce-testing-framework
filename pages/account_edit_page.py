@@ -5,34 +5,34 @@ class AccountEditPage:
 
     def __init__(self, page: Page):
         self.page = page
-        self.firstname_input = "#input-firstname"
-        self.lastname_input = "#input-lastname"
-        self.email_input = "#input-email"
-        self.telephone_input = "#input-telephone"
-        self.continue_button = "input[type='submit'][value='Continue']"
-        self.success_alert = ".alert-success"
-        self.breadcrumb = ".breadcrumb li.active"
+        self.firstname_input = page.locator("#input-firstname")
+        self.lastname_input = page.locator("#input-lastname")
+        self.email_input = page.locator("#input-email")
+        self.telephone_input = page.locator("#input-telephone")
+        self.continue_button = page.locator("input[type='submit'][value='Continue']")
+        self.success_alert = page.locator(".alert-success")
+        self.breadcrumb = page.locator(".breadcrumb li.active")
 
     def goto(self):
         self.page.goto(self.URL)
 
     def is_loaded(self):
-        return self.page.locator(self.breadcrumb).is_visible()
+        return self.breadcrumb.is_visible()
 
     def fill_firstname(self, firstname: str):
-        self.page.fill(self.firstname_input, firstname)
+        self.firstname_input.fill(firstname)
 
     def fill_lastname(self, lastname: str):
-        self.page.fill(self.lastname_input, lastname)
+        self.lastname_input.fill(lastname)
 
     def fill_email(self, email: str):
-        self.page.fill(self.email_input, email)
+        self.email_input.fill(email)
 
     def fill_telephone(self, telephone: str):
-        self.page.fill(self.telephone_input, telephone)
+        self.telephone_input.fill(telephone)
 
     def submit(self):
-        self.page.click(self.continue_button)
+        self.continue_button.click()
 
     def is_success_alert_visible(self):
-        return self.page.locator(self.success_alert).is_visible()
+        return self.success_alert.is_visible()

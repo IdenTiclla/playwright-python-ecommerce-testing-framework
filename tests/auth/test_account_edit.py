@@ -22,8 +22,8 @@ class TestAccountEdit:
         assert account_edit_page.is_loaded(), "Edit Account page should be loaded"
 
         # Check default values (adjust expected values as needed)
-        assert account_edit_page.page.input_value(account_edit_page.firstname_input) == "Jose", "Default firstname should be Jose"
-        assert account_edit_page.page.input_value(account_edit_page.lastname_input) == "Lopez", "Default lastname should be Lopez"
-        assert account_edit_page.page.input_value(account_edit_page.email_input) == "jose.lopez@gmail.com", "Default email should match login"
-        assert account_edit_page.page.input_value(account_edit_page.telephone_input) == "77478459", "Default telephone should be empty or as expected"
+        assert account_edit_page.firstname_input.input_value() == "Jose", "Default firstname should be Jose"
+        assert account_edit_page.lastname_input.input_value() == "Lopez", "Default lastname should be Lopez"
+        assert account_edit_page.email_input.input_value() == "jose.lopez@gmail.com", "Default email should match login"
+        assert account_edit_page.telephone_input.input_value() == "77478459", "Default telephone should be empty or as expected"
         
