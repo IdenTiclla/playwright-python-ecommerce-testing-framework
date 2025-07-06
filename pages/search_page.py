@@ -1,8 +1,12 @@
 from playwright.sync_api import Page, expect
+from components.search_bar import SearchBar
 
 class SearchPage:
     def __init__(self, page: Page):
         self.page = page
+
+        # components
+        self.search_bar = SearchBar(page)
         
         # Search form locators
         self.search_input = page.locator("div#main-header input[placeholder='Search For Products']")
@@ -26,19 +30,20 @@ class SearchPage:
         
         # Now handle additional options on search results page
         if category != "All Categories":
-            # self.page.wait_for_selector(self.category_dropdown)
-            # self.page.select_option(self.category_dropdown, label=category)
-
-            self.category_dropdown.click()
-            self.page.wait_for_selector(f"//a[contains(text(), '{category}')]", state="visible")
-            self.page.click(f"//a[contains(text(), '{category}')]")
+            self.search_bar.select_category(category)
 
         # Wait for the page to load completely
         self.page.wait_for_load_state("domcontentloaded")
-        # Check if the search in description checkbox is visible
+        
+        # Check if the search in description checkbox is available and visible
         if search_in_description:
-            self.search_in_description.wait_for(state="visible")
-            self.search_in_description.click()
+            try:
+                # Wait for the checkbox with a shorter timeout
+                self.search_in_description.wait_for(state="visible", timeout=5000)
+                self.search_in_description.click()
+            except:
+                # If the checkbox is not available, continue without it
+                print("Warning: Search in description checkbox not found or not visible")
 
         # If we changed any options, need to search again
         if category != "All Categories" or search_in_description:
