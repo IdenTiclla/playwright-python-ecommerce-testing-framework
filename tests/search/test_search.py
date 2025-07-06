@@ -38,6 +38,16 @@ class TestSearch:
         expect(search_page.no_results_message).to_be_visible()
         assert not search_page.has_results(), "Expected to find no results"
 
+    def test_search_with_results(self, search_page: SearchPage, home_page: HomePage):
+        home_page.goto()
+        search_page.perform_search("iPod")
+        count = search_page.get_result_count()
+        assert search_page.has_results(), "Expected to find results"
+        assert count == 15, "Expected 15 results"
+        # check that ipod is in the results
+        results = search_page.get_search_results()
+        assert any("iPod" in title for title in results), "Expected to find ipod in search results"
+
     def test_search_with_category(self, search_page: SearchPage, home_page: HomePage):
         home_page.goto()
         
