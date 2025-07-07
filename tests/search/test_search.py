@@ -70,4 +70,7 @@ class TestSearch:
         assert any("iPod" in title for title in results), "Expected to find iPod in search results"
 
         search_page.sort_by_price_low_to_high()
+        # assert url contains order=ASC
+        assert "order=ASC" in search_page.page.url, "Expected to find order=ASC in url"
+
         assert search_page.check_if_sorted_by_price_low_to_high(), "Expected to be sorted by price low to high"
