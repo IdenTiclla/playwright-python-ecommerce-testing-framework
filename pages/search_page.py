@@ -13,6 +13,8 @@ class SearchPage:
         self.search_button = page.locator("div#main-header div.search-button")
         self.category_dropdown = page.locator("div#main-header button.dropdown-toggle")
         self.search_in_description = page.locator("label[for='description']")
+
+        self.sort_by_select = page.locator("select#input-sort-212464")
         
         # Search results locators
         self.product_items = page.locator(".product-thumb")
@@ -21,66 +23,71 @@ class SearchPage:
         
     def perform_search(self, keyword: str, category: str = "All Categories", search_in_description: bool = False):
         """Execute a search with the given parameters"""
-        # Fill search input
+        # Fill search input and click search - Playwright auto-waits for elements
         self.search_input.fill(keyword)
-        
-        # Note: Category selection and description checkbox will be handled on the search results page
-        # First submit the search to get to the search page
         self.search_button.click()
         
-        # Now handle additional options on search results page
+        # Handle additional options on search results page if needed
         if category != "All Categories":
             self.search_bar.select_category(category)
 
-        # Wait for the page to load completely
-        self.page.wait_for_load_state("domcontentloaded")
-        
-        # Check if the search in description checkbox is available and visible
+        # Check if search in description checkbox is available (optional element)
         if search_in_description:
-            try:
-                # Wait for the checkbox with a shorter timeout
-                self.search_in_description.wait_for(state="visible", timeout=5000)
+            # Use is_visible() to check without throwing exceptions
+            if self.search_in_description.is_visible():
                 self.search_in_description.click()
-            except:
-                # If the checkbox is not available, continue without it
+            else:
                 print("Warning: Search in description checkbox not found or not visible")
 
-        # If we changed any options, need to search again
+        # Re-search if we changed any options
         if category != "All Categories" or search_in_description:
             self.search_button.click()
 
         
     def get_search_results(self):
         """Return a list of product titles from search results"""
-        
-        # Wait for the page to load completely
-        self.page.wait_for_load_state("domcontentloaded")
-        
-        # Wait for at least one product title to be visible
-        self.product_titles.first.wait_for(state="visible")
-
+        # Playwright auto-waits for elements when using all_text_contents()
         return self.product_titles.all_text_contents()
         
     def get_result_count(self):
         """Return the number of products found"""
-        self.page.wait_for_load_state("domcontentloaded")
+        # count() automatically waits for elements to be attached to DOM
         return self.product_items.count()
         
     def has_results(self):
         """Check if any results were found"""
-        # Wait for the page to load completely
-        self.page.wait_for_load_state("domcontentloaded")
-        
-        # Check if there are any product items
-        try:
-            # Try to wait for products with a short timeout
-            self.product_items.first.wait_for(state="visible", timeout=5000)
+        # Use is_visible() with short timeout to check for results efficiently
+        if self.product_items.first.is_visible():
             return True
-        except:
-            # If no products are found, check if the no results message is visible
-            try:
-                self.no_results_message.wait_for(state="visible", timeout=5000)
-                return False
-            except:
-                # If neither is visible, assume no results
-                return False
+        # If no products are visible, we have no results
+        return False
+            
+
+    def get_product_prices(self):
+        """Return a list of product prices from search results"""
+        # Playwright auto-waits for elements when using all_text_contents()
+        price_locator = self.product_items.locator("div.price")
+        prices_str = price_locator.all_text_contents()
+        prices_float = [float(price.replace("$", "")) for price in prices_str]
+        return prices_float
+    
+            
+    def select_sort_by(self, sort_by: str):
+        """Select a sort by option"""
+        # select_option() auto-waits and triggers change events
+        self.sort_by_select.select_option(sort_by)
+        # Wait for network activity to settle after sorting
+        self.page.wait_for_load_state("networkidle")
+            
+    def sort_by_price_low_to_high(self):
+        """Sort the search results by price low to high"""
+        self.select_sort_by("Price (Low > High)")
+
+    def check_if_sorted_by_price_low_to_high(self):
+        """Check if the search results are sorted by price low to high"""
+        # Wait for the first product to be visible (ensures sorting is complete)
+        expect(self.product_items.first).to_be_visible()
+        prices = self.get_product_prices()
+        return prices == sorted(prices)
+
+    
