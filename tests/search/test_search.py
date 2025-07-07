@@ -74,3 +74,18 @@ class TestSearch:
         assert "order=ASC" in search_page.page.url, "Expected to find order=ASC in url"
 
         assert search_page.check_if_sorted_by_price_low_to_high(), "Expected to be sorted by price low to high"
+
+    def test_search_results_sorting_by_price_high_to_low(self, search_page: SearchPage, home_page: HomePage):
+        home_page.goto()
+        search_page.perform_search("iPod")
+        
+        # Ensure we have results to sort by checking first product is visible
+        expect(search_page.product_items.first).to_be_visible()
+        count = search_page.get_result_count()
+        assert count > 0, "Expected at least one search result"
+
+        search_page.sort_by_price_high_to_low()
+        # assert url contains order=DESC
+        assert "order=DESC" in search_page.page.url, "Expected to find order=DESC in url"
+
+        assert search_page.check_if_sorted_by_price_high_to_low(), "Expected to be sorted by price high to low"

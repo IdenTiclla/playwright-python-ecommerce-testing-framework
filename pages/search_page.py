@@ -83,11 +83,22 @@ class SearchPage:
         """Sort the search results by price low to high"""
         self.select_sort_by("Price (Low > High)")
 
+    def sort_by_price_high_to_low(self):
+        """Sort the search results by price high to low"""
+        self.select_sort_by("Price (High > Low)")
+
     def check_if_sorted_by_price_low_to_high(self):
         """Check if the search results are sorted by price low to high"""
         # Wait for the first product to be visible (ensures sorting is complete)
         expect(self.product_items.first).to_be_visible()
         prices = self.get_product_prices()
         return prices == sorted(prices)
+    
+    def check_if_sorted_by_price_high_to_low(self):
+        """Check if the search results are sorted by price high to low"""
+        # Wait for the first product to be visible (ensures sorting is complete)
+        expect(self.product_items.first).to_be_visible()
+        prices = self.get_product_prices()
+        return prices == sorted(prices, reverse=True)
 
     
