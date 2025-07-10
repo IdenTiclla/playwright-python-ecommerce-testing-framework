@@ -1,0 +1,28 @@
+from playwright.sync_api import Page, expect
+from components.navbar_horizontal import NavbarHorizontal
+from components.search_bar import SearchBar
+from components.alert import Alert
+
+class BasePage:
+    """
+    La clase base para todos los Page Objects.
+    Contiene elementos y funcionalidades comunes a todas las páginas.
+    """
+    def __init__(self, page: Page):
+        self.page = page
+        # Componentes comunes que aparecen en la mayoría de las páginas
+        self.navbar_horizontal = NavbarHorizontal(page)
+        self.search_bar = SearchBar(page)
+        self.alert = Alert(page)
+
+    def _visit(self, url: str):
+        """Navega a una URL específica."""
+        self.page.goto(url)
+
+    def wait_for_page_load(self, state: str = "domcontentloaded"):
+        """Espera a que la página alcance un estado de carga específico."""
+        self.page.wait_for_load_state(state)
+
+    def get_title(self) -> str:
+        """Obtiene el título de la página."""
+        return self.page.title()
