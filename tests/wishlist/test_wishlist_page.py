@@ -242,7 +242,7 @@ class TestWishlistPage:
         home_page.goto()
         home_page.navbar_horizontal.click_my_account_option("Login")
         login_page.wait_for_page_load()
-        quantity_of_sidebar_links = login_page.sidebar_navigation.get_quantity_of_sidebar_links()
+        quantity_of_sidebar_links = login_page.sidebar_navigation_component.get_quantity_of_sidebar_links()
         assert quantity_of_sidebar_links == 13, f"Expected 13 sidebar links, got {quantity_of_sidebar_links}"
         login_page.login("test@qwertest.com", "P@ssw0rd")
         

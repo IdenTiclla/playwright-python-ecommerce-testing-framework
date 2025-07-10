@@ -1,17 +1,9 @@
 from playwright.sync_api import Page
-from components.navbar_horizontal import NavbarHorizontal
-from components.sidebar_navigation import SidebarNavigation
-from components.alert import Alert
-from components.search_bar import SearchBar
+from pages.base_page import BasePage
 
-class LoginPage:
+class LoginPage(BasePage):
     def __init__(self, page: Page):
-        self.page = page
-        # Components
-        self.search_bar = SearchBar(page)
-        self.navbar_horizontal = NavbarHorizontal(page)
-        self.sidebar_navigation = SidebarNavigation(page)
-        self.alert = Alert(page)
+        super().__init__(page)
         # URLs
         self.login_url = "https://ecommerce-playground.lambdatest.io/index.php?route=account/login"
         

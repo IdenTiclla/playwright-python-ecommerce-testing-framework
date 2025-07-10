@@ -1,7 +1,8 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
 from components.alert import Alert
+from components.sidebar_navigation import SidebarNavigation
 
 class BasePage:
     """
@@ -13,7 +14,8 @@ class BasePage:
         # Componentes comunes que aparecen en la mayoría de las páginas
         self.navbar_horizontal = NavbarHorizontal(page)
         self.search_bar = SearchBar(page)
-        self.alert = Alert(page)
+        self.alert_component = Alert(page)
+        self.sidebar_navigation_component = SidebarNavigation(page)
 
     def _visit(self, url: str):
         """Navega a una URL específica."""
