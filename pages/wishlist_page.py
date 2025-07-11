@@ -1,17 +1,15 @@
 from playwright.sync_api import Page
 from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
-from components.alert import Alert
 from components.sidebar_navigation import SidebarNavigation
-
-class WishlistPage:
+from pages.base_page import BasePage
+class WishListPage(BasePage):
     URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/wishlist"
 
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.navbar_horizontal = NavbarHorizontal(page)
         self.search_bar = SearchBar(page)
-        self.alert = Alert(page)
         self.sidebar_navigation = SidebarNavigation(page)
         
         # Page elements
