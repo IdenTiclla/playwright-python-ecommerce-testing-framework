@@ -1,121 +1,120 @@
-from pages.home_page import HomePage
+import pytest
+from tests.base_test import BaseTest
 
-def test_navbar_links(page):
-    home = HomePage(page)
-    home.goto()
-    home.navbar_horizontal.click_blog()
-    assert page.url.endswith('/blog/home')
-    assert page.url.startswith('https://ecommerce-playground.lambdatest.io/')
-    assert page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/blog/home'
+@pytest.mark.navbar_horizontal
+class TestNavbarHorizontal(BaseTest):
 
-    
-
-def test_navbar_horizontal_special_hot(page):
-    home = HomePage(page)
-    home.goto()
-    home.navbar_horizontal.click_special_hot()
-    assert page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=product/special'
-    assert page.url.startswith('https://ecommerce-playground.lambdatest.io/')
-    assert page.url.endswith('route=product/special')
-
-def test_navbar_horizontal_home_page(page):
-    home = HomePage(page)
-    home.goto()
-    home.navbar_horizontal.click_home_page()
-    assert page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=common/home'
-    assert page.url.startswith('https://ecommerce-playground.lambdatest.io/')
-    assert page.url.endswith('route=common/home')
-
-
-def test_megamenu_options(page):
-    home = HomePage(page)
-    home.goto()
-    home.navbar_horizontal.click_megamenu_option("Apple")
-    # assert start with
-    assert page.url.startswith("https://ecommerce-playground.lambdatest.io")
-    # assert url is equal to
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=8"
-    # assert end with
-    assert page.url.endswith("route=product/manufacturer/info&manufacturer_id=8")   
-    assert page.title() == "Apple"
-
-    # wait for the page to load
-    page.wait_for_load_state("domcontentloaded")
-
-    home.navbar_horizontal.click_megamenu_option("HTC")
-    # assert start with
-    assert page.url.startswith("https://ecommerce-playground.lambdatest.io")
-    # assert url is equal to
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=5"
-    # assert end with
-    assert page.url.endswith("route=product/manufacturer/info&manufacturer_id=5")
-    assert page.title() == "HTC"
-
-    # wait for the page to load
-    page.wait_for_load_state("domcontentloaded")
-
-    home.navbar_horizontal.click_megamenu_option("LG")
-    # assert start with
-    assert page.url.startswith("https://ecommerce-playground.lambdatest.io")
-    # assert url is equal to
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=8"
-    # assert end with
-    assert page.url.endswith("route=product/manufacturer/info&manufacturer_id=8")
+    def test_navbar_links(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_blog()
+        assert self.page.url.endswith('/blog/home')
+        assert self.page.url.startswith('https://ecommerce-playground.lambdatest.io/')
+        assert self.page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/blog/home'
 
     
-def test_shop_by_category(page):
-    home = HomePage(page)
-    home.goto()
-    
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Components")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=25"
-    
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Cameras")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=33"
+    def test_navbar_horizontal_special_hot(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_special_hot()
+        assert self.page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=product/special'
+        assert self.page.url.startswith('https://ecommerce-playground.lambdatest.io/')
+        assert self.page.url.endswith('route=product/special')
 
-
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Phone, Tablets & Ipod")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=57"
+    def test_navbar_horizontal_home_page(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_home_page()
+        assert self.page.url == 'https://ecommerce-playground.lambdatest.io/index.php?route=common/home'
+        assert self.page.url.startswith('https://ecommerce-playground.lambdatest.io/')
+        assert self.page.url.endswith('route=common/home')
 
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("MP3 Players")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=34"
+    def test_megamenu_options(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_megamenu_option("Apple")
+        # assert start with
+        assert self.page.url.startswith("https://ecommerce-playground.lambdatest.io")
+        # assert url is equal to
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=8"
+        # assert end with
+        assert self.page.url.endswith("route=product/manufacturer/info&manufacturer_id=8")   
+        assert self.page.title() == "Apple"
+
+        # wait for the page to load
+        self.page.wait_for_load_state("domcontentloaded")
+
+        self.home_page.navbar_horizontal.click_megamenu_option("HTC")
+        # assert start with
+        assert self.page.url.startswith("https://ecommerce-playground.lambdatest.io")
+        # assert url is equal to
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=5"
+        # assert end with
+        assert self.page.url.endswith("route=product/manufacturer/info&manufacturer_id=5")
+        assert self.page.title() == "HTC"
+
+        # wait for the page to load
+        self.page.wait_for_load_state("domcontentloaded")
+
+        self.home_page.navbar_horizontal.click_megamenu_option("LG")
+        # assert start with
+        assert self.page.url.startswith("https://ecommerce-playground.lambdatest.io")
+        # assert url is equal to
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/manufacturer/info&manufacturer_id=8"
+        # assert end with
+        assert self.page.url.endswith("route=product/manufacturer/info&manufacturer_id=8")
+
+        
+    def test_shop_by_category(self):
+        self.home_page.goto()
+        
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Components")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=25"
+        
+
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Cameras")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=33"
+
+
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Phone, Tablets & Ipod")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=57"
+
+
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("MP3 Players")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=34"
 
 
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Laptops & Notebooks")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=18"
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Laptops & Notebooks")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=18"
 
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Desktops and Monitors")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=28"
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Desktops and Monitors")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=28"
 
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Printers & Scanners")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=30"
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Printers & Scanners")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=30"
 
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Mice and Trackballs")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=29"
-    
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Mice and Trackballs")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/category&path=29"
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Fashion and Accessories")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/"
-    
 
-    page.wait_for_load_state("domcontentloaded")
-    home.navbar_horizontal.click_shop_by_category("Beauty and Saloon")
-    assert page.url == "https://ecommerce-playground.lambdatest.io/"
-    
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Fashion and Accessories")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/"
+        
+
+        self.page.wait_for_load_state("domcontentloaded")
+        self.home_page.navbar_horizontal.click_shop_by_category("Beauty and Saloon")
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/"
+        
     
 
