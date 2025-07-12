@@ -1,8 +1,4 @@
-import pytest
-from pages.login_page import LoginPage
-from pages.account_edit_page import AccountEditPage
 from tests.base_test import BaseTest
-from playwright.sync_api import expect, Page
 
 class TestAccountEdit(BaseTest):
 
