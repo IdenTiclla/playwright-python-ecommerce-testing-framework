@@ -59,5 +59,34 @@ class TestLogin(BaseTest):
         # Verify redirect to register page
         expect(self.login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
 
+    def test_login_attempts_limit(self):
+        # Navigate to login page
+        self.login_page.navigate()
 
 
+        # Try to login with invalid credentials
+        email = "invalidexample2@example.com"
+        password = "Wrong password"
+
+        for _ in range(5):
+            self.login_page.login(
+                email=email,
+                password=password
+            )
+
+            # Verify error message is displayed
+            assert self.login_page.alert_component.is_visible() == True
+            expected_error_message = "Warning: No match for E-Mail Address and/or Password."
+            actual_error_message = self.login_page.alert_component.get_text()
+            assert actual_error_message == expected_error_message
+
+        self.login_page.login(
+                email=email,
+                password=password
+            )
+
+        # Verify error message is displayed
+        assert self.login_page.alert_component.is_visible() == True
+        expected_error_message = "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
+        actual_error_message = self.login_page.alert_component.get_text()
+        assert actual_error_message == expected_error_message
