@@ -1,7 +1,8 @@
 from playwright.sync_api import Page
-
-class RegisterPage:
+from pages.base_page import BasePage
+class RegisterPage(BasePage):
     def __init__(self, page: Page):
+        super().__init__(page)
         self.page = page
         
         # URLs
@@ -24,10 +25,11 @@ class RegisterPage:
 
     def navigate(self):
         """Navigate to register page"""
-        self.page.goto(self.register_url)
+        self.page.goto(self.register_url, wait_until="networkidle")
         
     def register(self, firstname: str, lastname: str, email: str, telephone: str, 
-                password: str, password_confirm: str, subscribe_newsletter: bool = False):
+                password: str, password_confirm: str, subscribe_newsletter: bool = False,
+                accept_terms: bool = False):
         """Fill in registration form and submit"""
         self.firstname_input.fill(firstname)
         self.lastname_input.fill(lastname)
@@ -37,20 +39,19 @@ class RegisterPage:
         self.password_confirm_input.fill(password_confirm)
 
 
-        # Handle newsletter subscription with explicit wait and force-click
+        # Handle newsletter subscription
         if subscribe_newsletter:
-            self.newsletter_yes_radio.wait_for()
             self.newsletter_yes_radio.click(force=True)
         else:
-            self.newsletter_no_radio.wait_for()
             self.newsletter_no_radio.click(force=True)
             
         # Accept privacy policy
-        self.privacy_policy_checkbox.wait_for()
-        self.privacy_policy_checkbox.click(force=True)
+        if accept_terms:
+            self.privacy_policy_checkbox.click(force=True)
 
-        # Submit form
-        self.continue_button.click()
+        # Submit form and wait for navigation
+        with self.page.expect_navigation():
+            self.continue_button.click()
         
     def go_to_login(self):
         """Click on login page link"""

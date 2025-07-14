@@ -16,7 +16,8 @@ class TestRegister(BaseTest):
             telephone="+1234567890",
             password="Test@123",
             password_confirm="Test@123",  # Same password for confirmation
-            subscribe_newsletter=True
+            subscribe_newsletter=True,
+            accept_terms=True
         )
         
         # Verify registration success (you can add appropriate assertions here)
@@ -94,12 +95,13 @@ class TestRegister(BaseTest):
             telephone=telephone,
             password=password,
             password_confirm=password_confirm,
-            subscribe_newsletter=False
+            subscribe_newsletter=False,
+            accept_terms=False
         )
-        # Verify that the account is created
-        expect(self.register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/success")
-        title = self.success_page.get_page_title()
-        assert title == "Your Account Has Been Created!", f"Expected title to be 'Your Account Has Been Created!', but got '{title}'"
+        # Verify that the error message is visible
+        error_message = self.register_page.alert_component.get_text()
+        assert error_message == "Warning: You must agree to the Privacy Policy!", f"Expected error message to be 'Warning: You must agree to the Privacy Policy!', but got '{error_message}'"
+
 
     def test_edit_account_default_values(self):
         # Navigate to register page
@@ -121,11 +123,18 @@ class TestRegister(BaseTest):
             telephone=telephone,
             password=password,
             password_confirm=password_confirm,
-            subscribe_newsletter=True
+            subscribe_newsletter=True,
+            accept_terms=True
         )
 
         # go to edit account page
-        self.account_edit_page.goto()
+        self.account_edit_page.navigate()
+
+        # assert that the url is correct
+        expect(self.account_edit_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/edit")
+        
+        # wait for page to be fully loaded
+        self.account_edit_page.page.wait_for_load_state("networkidle")
 
         # verify that the default values are filled in
     

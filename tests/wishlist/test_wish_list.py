@@ -106,7 +106,16 @@ class TestWishList(BaseTest):
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        self.register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+        self.register_page.register(
+            firstname=random_firstname,
+            lastname=random_lastname,
+            email=random_email,
+            telephone=random_telephone,
+            password=random_password,
+            password_confirm=random_password,
+            subscribe_newsletter=False,
+            accept_terms=True
+        )
 
         self.wishlist_page.goto()
         self.wishlist_page.wait_for_page_load()
@@ -127,7 +136,16 @@ class TestWishList(BaseTest):
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        self.register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+        self.register_page.register(
+            firstname=random_firstname,
+            lastname=random_lastname,
+            email=random_email,
+            telephone=random_telephone,
+            password=random_password,
+            password_confirm=random_password,
+            subscribe_newsletter=False,
+            accept_terms=True
+        )
 
         self.wishlist_page.goto()
         self.wishlist_page.wait_for_page_load()
@@ -148,7 +166,15 @@ class TestWishList(BaseTest):
         random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
         random_telephone = f"1234567890{random.randint(1, 1000000)}"
         random_password = "TestPassword123!"
-        self.register_page.register(firstname=random_firstname, lastname=random_lastname, email=random_email, telephone=random_telephone, password=random_password, password_confirm=random_password, subscribe_newsletter=False)
+        self.register_page.register(
+            firstname=random_firstname,
+            lastname=random_lastname,
+            email=random_email,
+            telephone=random_telephone,
+            password=random_password,
+            password_confirm=random_password, subscribe_newsletter=False,
+            accept_terms=True
+        )
 
         # add a product to wishlist
         self.home_page.goto()

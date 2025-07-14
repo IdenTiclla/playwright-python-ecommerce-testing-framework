@@ -1,10 +1,12 @@
 from playwright.sync_api import Page
 
-class AccountEditPage:
+from pages.base_page import BasePage
+
+class AccountEditPage(BasePage):
     URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/edit"
 
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.firstname_input = page.locator("#input-firstname")
         self.lastname_input = page.locator("#input-lastname")
         self.email_input = page.locator("#input-email")
@@ -13,8 +15,8 @@ class AccountEditPage:
         self.success_alert = page.locator(".alert-success")
         self.breadcrumb = page.locator(".breadcrumb li.active")
 
-    def goto(self):
-        self.page.goto(self.URL)
+    def navigate(self):
+        self._visit(self.URL)
 
     def is_loaded(self):
         return self.breadcrumb.is_visible()

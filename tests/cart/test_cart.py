@@ -24,7 +24,8 @@ class TestCart(BaseTest):
             telephone="+1234567890",
             password="Test@123",
             password_confirm="Test@123",
-            subscribe_newsletter=True
+            subscribe_newsletter=True,
+            accept_terms=True
         )
 
         # expect() ya tiene auto-wait de 5 segundos - no necesitamos timeout explícito
@@ -53,7 +54,8 @@ class TestCart(BaseTest):
             telephone="+1234567890",
             password="Test@123",
             password_confirm="Test@123",
-            subscribe_newsletter=True
+            subscribe_newsletter=True,
+            accept_terms=True
         )
         
         # Solo necesitamos timeout extendido para URL porque puede tardar más que 5s

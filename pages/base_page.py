@@ -19,7 +19,7 @@ class BasePage:
 
     def _visit(self, url: str):
         """Navega a una URL específica."""
-        self.page.goto(url)
+        self.page.goto(url, wait_until="networkidle")
 
     def wait_for_page_load(self, state: str = "domcontentloaded"):
         """Espera a que la página alcance un estado de carga específico."""
