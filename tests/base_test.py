@@ -7,6 +7,7 @@ from pages.account_page import AccountPage
 from pages.account_edit_page import AccountEditPage
 from pages.wishlist_page import WishListPage
 from pages.success_page import SuccessPage
+from pages.account_edit_page import AccountEditPage
 
 
 @pytest.mark.usefixtures("page")

@@ -36,3 +36,16 @@ class AccountEditPage:
 
     def is_success_alert_visible(self):
         return self.success_alert.is_visible()
+    
+
+    def get_first_name_value(self):
+        return self.firstname_input.input_value()
+
+    def get_last_name_value(self):
+        return self.lastname_input.input_value()
+
+    def get_email_value(self):
+        return self.email_input.input_value()
+    
+    def get_telephone_value(self):
+        return self.telephone_input.input_value()

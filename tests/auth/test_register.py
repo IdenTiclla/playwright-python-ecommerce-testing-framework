@@ -1,8 +1,6 @@
-import pytest
 import time
 from tests.base_test import BaseTest
-from playwright.sync_api import Page, expect
-from pages.success_page import SuccessPage
+from playwright.sync_api import expect
 from utils.data_generator import generate_random_email, generate_random_first_name, generate_random_last_name, generate_random_phone_number, generate_random_password
 class TestRegister(BaseTest):
     
@@ -102,3 +100,41 @@ class TestRegister(BaseTest):
         expect(self.register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/success")
         title = self.success_page.get_page_title()
         assert title == "Your Account Has Been Created!", f"Expected title to be 'Your Account Has Been Created!', but got '{title}'"
+
+    def test_edit_account_default_values(self):
+        # Navigate to register page
+        self.register_page.navigate()
+
+        # Fill in registraation form with valid data
+        first_name = generate_random_first_name()
+        last_name = generate_random_last_name()
+        email = generate_random_email()
+        telephone = generate_random_phone_number()
+        password = generate_random_password()
+        password_confirm = password
+
+        # Fill in registraation form with valid data
+        self.register_page.register(
+            firstname=first_name,
+            lastname=last_name,
+            email=email,
+            telephone=telephone,
+            password=password,
+            password_confirm=password_confirm,
+            subscribe_newsletter=True
+        )
+
+        # go to edit account page
+        self.account_edit_page.goto()
+
+        # verify that the default values are filled in
+    
+        first_name_value = self.account_edit_page.get_first_name_value()
+        last_name_value = self.account_edit_page.get_last_name_value()
+        email_value = self.account_edit_page.get_email_value()
+        telephone_value = self.account_edit_page.get_telephone_value()
+
+        assert first_name_value == first_name, f"Expected first name to be '{first_name}', but got '{first_name_value}'"
+        assert last_name_value == last_name, f"Expected last name to be '{last_name}', but got '{last_name_value}'"
+        assert email_value == email, f"Expected email to be '{email}', but got '{email_value}'"
+        assert telephone_value == telephone, f"Expected telephone to be '{telephone}', but got '{telephone_value}'"
