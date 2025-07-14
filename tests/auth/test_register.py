@@ -1,9 +1,9 @@
 import pytest
 import time
 from tests.base_test import BaseTest
-from pages.register_page import RegisterPage
 from playwright.sync_api import Page, expect
-
+from pages.success_page import SuccessPage
+from utils.data_generator import generate_random_email, generate_random_first_name, generate_random_last_name, generate_random_phone_number, generate_random_password
 class TestRegister(BaseTest):
     
     def test_user_can_register(self):
@@ -74,3 +74,31 @@ class TestRegister(BaseTest):
         # Verify the text of the error message
         password_error_text = self.register_page.get_password_error_text()
         assert password_error_text == "Password confirmation does not match password!", f"Expected error message to be 'Password confirmation does not match password!', but got '{password_error_text}'"
+
+    def test_trying_to_register_without_accepting_terms_and_conditions(self):
+        # Navigate to register page
+        self.register_page.navigate()
+
+        # Fill in registraation form with valid data
+
+        first_name = generate_random_first_name()
+        last_name = generate_random_last_name()
+        email = generate_random_email()
+        telephone = generate_random_phone_number()
+        password = generate_random_password()
+        password_confirm = password
+
+        # Try to register without accepting terms and conditions
+        self.register_page.register(
+            firstname=first_name,
+            lastname=last_name,
+            email=email,
+            telephone=telephone,
+            password=password,
+            password_confirm=password_confirm,
+            subscribe_newsletter=False
+        )
+        # Verify that the account is created
+        expect(self.register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/success")
+        title = self.success_page.get_page_title()
+        assert title == "Your Account Has Been Created!", f"Expected title to be 'Your Account Has Been Created!', but got '{title}'"

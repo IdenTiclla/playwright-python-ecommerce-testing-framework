@@ -6,6 +6,7 @@ from pages.search_page import SearchPage
 from pages.account_page import AccountPage
 from pages.account_edit_page import AccountEditPage
 from pages.wishlist_page import WishListPage
+from pages.success_page import SuccessPage
 
 
 @pytest.mark.usefixtures("page")
@@ -25,5 +26,6 @@ class BaseTest:
         self.account_page = AccountPage(page)
         self.account_edit_page = AccountEditPage(page)
         self.wishlist_page = WishListPage(page)
+        self.success_page = SuccessPage(page)
 
     # El teardown lo maneja conftest.py - no necesitamos duplicarlo aquí
