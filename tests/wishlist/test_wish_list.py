@@ -4,7 +4,7 @@ import random
 import pytest
 
 class TestWishList(BaseTest):
-    def test_add_to_wishlist_from_top_products(self):
+    def test_add_to_wishlist_from_top_products_without_login(self):
         # home_page.goto()
         self.home_page.goto()
         self.page.wait_for_timeout(1000)
@@ -23,10 +23,10 @@ class TestWishList(BaseTest):
         self.page.wait_for_timeout(1000)
 
         # verificar que se muestra la notificacion
-        expect(self.page.locator(self.home_page.notification.container)).to_be_visible(timeout=10000)
-        # notification_title = page.locator(home_page.notification.title).text_content()
+        expect(self.home_page.notification.container).to_be_visible()
+
+        # verificar el texto de la notificacion
         notification_title = self.home_page.notification.get_title_text()
-        # notification_message = page.locator(home_page.notification.message).text_content()
         notification_message = self.home_page.notification.get_message_text()
 
         # verificar el texto del boton de login
@@ -45,10 +45,10 @@ class TestWishList(BaseTest):
         self.home_page.notification.close()
 
         # verificar que la notificacion se cierra
-        expect(self.page.locator(self.home_page.notification.container)).not_to_be_visible(timeout=10000)
+        expect(self.home_page.notification.container).to_be_hidden()
 
     
-    def test_add_to_wishlist_from_quick_view(self):
+    def test_add_to_wishlist_from_quick_view_without_login(self):
         self.home_page.goto()
         self.page.wait_for_timeout(1000)
 
@@ -66,7 +66,9 @@ class TestWishList(BaseTest):
 
         self.home_page.quick_view_modal.add_to_wishlist()
 
-        expect(self.page.locator(self.home_page.notification.container)).to_be_visible(timeout=10000)
+        # expect(self.page.locator(self.home_page.notification.container)).to_be_visible(timeout=10000)
+
+        expect(self.home_page.notification.container).to_be_visible()
 
         notification_title = self.home_page.notification.get_title_text()
         notification_message = self.home_page.notification.get_message_text()
@@ -82,7 +84,8 @@ class TestWishList(BaseTest):
         self.home_page.notification.close()
 
         # verificar que la notificacion se cierra
-        expect(self.page.locator(self.home_page.notification.container)).not_to_be_visible(timeout=10000)
+        # expect(self.page.locator(self.home_page.notification.container)).not_to_be_visible(timeout=10000)
+        expect(self.home_page.notification.container).not_to_be_visible()
 
     def test_wishlist_page_navigation_without_logged_user(self):
         """Test direct navigation to wishlist page"""

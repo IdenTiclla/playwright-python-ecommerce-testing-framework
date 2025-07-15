@@ -69,26 +69,24 @@ class TestCart(BaseTest):
         self.home_page.goto()
         self.home_page.top_products.add_product_to_cart(index=0)
         
-        # Verifying the notification
-        notification_selector = self.page.locator(self.home_page.notification.container)
-        expect(notification_selector).to_be_visible()
+        # Verifying the notification - USANDO expect() de Playwright
+        expect(self.home_page.notification.container).to_be_visible()
         
         expected_message = "Success: You have added iMac to your shopping cart!"
-        notification_message = self.page.locator(self.home_page.notification.message)
-        expect(notification_message).to_have_text(expected_message)
+        expect(self.home_page.notification.message).to_have_text(expected_message)
         
-        expect(self.page.locator(self.home_page.notification.view_cart_button)).to_be_visible()
-        expect(self.page.locator(self.home_page.notification.checkout_button)).to_be_visible()
+        expect(self.home_page.notification.view_cart_button).to_be_visible()
+        expect(self.home_page.notification.checkout_button).to_be_visible()
 
         self.home_page.notification.close()
-        expect(notification_selector).not_to_be_visible()
+        expect(self.home_page.notification.container).to_be_hidden()
         
         assert self.home_page.header_actions.get_cart_count() == "1"
         self.home_page.header_actions.click_on_cart_button()
         expect(self.home_page.cart_panel.panel).to_be_visible()
         
-        expect(self.home_page.cart_panel.message).not_to_be_visible()
-        
-        expect(self.home_page.cart_panel.sub_total).not_to_have_text("$0.00")
-        expect(self.home_page.cart_panel.total).not_to_have_text("$0.00")
+        # Después de agregar un producto, el carrito NO debería estar vacío
+        # Verificamos que los totales no sean $0.00
+        assert self.home_page.cart_panel.get_sub_total() != "$0.00"
+        assert self.home_page.cart_panel.get_total() != "$0.00"
 

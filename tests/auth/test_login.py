@@ -2,7 +2,6 @@ import os
 from playwright.sync_api import expect
 from tests.base_test import BaseTest
 from utils.data_generator import generate_random_email, generate_random_password
-
 class TestLogin(BaseTest):
     
     def test_user_can_login(self):
@@ -28,8 +27,8 @@ class TestLogin(BaseTest):
         
         # Try to login with invalid credentials
         self.login_page.login(
-            email="invalid33@example.com",
-            password="WrongPassword"
+            email=generate_random_email(),
+            password=generate_random_password()
         )
         
         # Verify error message is displayeds
