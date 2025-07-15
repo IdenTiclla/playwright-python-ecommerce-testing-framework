@@ -31,7 +31,8 @@ class TestCart(BaseTest):
         )
 
         self.success_page.wait_for_page_load()
-        self.home_page.click_on_my_cart_button()
+        assert self.home_page.header_actions.get_cart_count() == "0"
+        self.home_page.header_actions.click_on_cart_button()
         assert self.home_page.cart_panel.is_visible() == True
 
         # Usamos los métodos de la clase componente para las aserciones
@@ -47,8 +48,8 @@ class TestCart(BaseTest):
         """
         Verifica que se puede añadir un producto al carrito después de registrar un nuevo usuario.
         """
-        # --- Parte 1: Registro de Usuario ---
-        self.home_page.goto()  # goto() ya espera que la página cargue
+        # Registering an user
+        self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
         
         generated_password = generate_random_password()
@@ -62,46 +63,32 @@ class TestCart(BaseTest):
             subscribe_newsletter=True,
             accept_terms=True
         )
-        
-        # Solo necesitamos timeout extendido para URL porque puede tardar más que 5s
-        expect(self.page).to_have_url(re.compile(".*account/success"), timeout=10000)
-        
-        # --- Parte 2: Añadir producto al carrito ---
-        self.home_page.goto()
-        expect(self.page).to_have_title(re.compile("Your Store"))
 
-        self.home_page.top_products.scroll_to_top_products()
-        # scroll ya posiciona, expect() espera automáticamente
-        expect(self.page.locator(self.home_page.top_products.section)).to_be_visible()
-        
-        # add_product_to_cart ya maneja las esperas internas
+        # Adding a product to the cart
+        self.success_page.wait_for_page_load()
+        self.home_page.goto()
         self.home_page.top_products.add_product_to_cart(index=0)
         
-        # expect() con auto-wait es suficiente para notificaciones
+        # Verifying the notification
         notification_selector = self.page.locator(self.home_page.notification.container)
         expect(notification_selector).to_be_visible()
         
-        # Verificar el mensaje usando expect() que es más robusto que text_content()
         expected_message = "Success: You have added iMac to your shopping cart!"
         notification_message = self.page.locator(self.home_page.notification.message)
         expect(notification_message).to_have_text(expected_message)
         
-        # expect() ya espera automáticamente - no necesitamos timeout
         expect(self.page.locator(self.home_page.notification.view_cart_button)).to_be_visible()
         expect(self.page.locator(self.home_page.notification.checkout_button)).to_be_visible()
 
-        # close() ya maneja el click internamente
         self.home_page.notification.close()
         expect(notification_selector).not_to_be_visible()
         
-        # --- Parte 3: Verificar el contenido del carrito ---
-        self.home_page.click_on_my_cart_button()
+        assert self.home_page.header_actions.get_cart_count() == "1"
+        self.home_page.header_actions.click_on_cart_button()
         expect(self.home_page.cart_panel.panel).to_be_visible()
         
-        # expect() con auto-wait
         expect(self.home_page.cart_panel.message).not_to_be_visible()
         
-        # expect() espera automáticamente hasta que el texto no sea $0.00
         expect(self.home_page.cart_panel.sub_total).not_to_have_text("$0.00")
         expect(self.home_page.cart_panel.total).not_to_have_text("$0.00")
 

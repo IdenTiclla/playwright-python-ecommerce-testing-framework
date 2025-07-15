@@ -4,6 +4,7 @@ from components.top_products import TopProducts
 from components.quick_view_modal import QuickViewModal
 from components.notification import Notification
 from pages.base_page import BasePage
+from components.header_actions import HeaderActions
 
 class HomePage(BasePage):
     URL = "https://ecommerce-playground.lambdatest.io/"
@@ -14,9 +15,7 @@ class HomePage(BasePage):
         self.top_products = TopProducts(page)
         self.quick_view_modal = QuickViewModal(page)
         self.notification = Notification(page)
-        self.compare_button = page.locator("div#main-header div.widget-search + div")
-        self.wishlist_button = page.locator("div#main-header div.widget-search + div + div")
-        self.cart_button = page.locator("div#main-header div.widget-search + div + div + div")
+        self.header_actions = HeaderActions(page)
 
 
     def goto(self):
