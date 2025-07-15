@@ -8,7 +8,7 @@ class TestAccountEdit(BaseTest):
         self.login_page.login("jose.lopez@gmail.com", "P@ssw0rd")
 
         # Go to edit account page
-        self.account_edit_page.goto()
+        self.account_edit_page.navigate()
         assert self.account_edit_page.is_loaded(), "Edit Account page should be loaded"
 
         # Check default values (adjust expected values as needed)

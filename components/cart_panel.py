@@ -2,24 +2,24 @@ from playwright.sync_api import Page
 
 class CartPanel:
     def __init__(self, page: Page):
-        self.page = page  # Fixed assignment
-        self.panel = "div#cart-total-drawer"
-        self.title = f"{self.panel} h5"
-        self.message = f"{self.panel} p.text-center"
-        self.sub_total = f"{self.panel} table:nth-child(2) tr:first-child td.text-right"
-        self.total = f"{self.panel} table:nth-child(2) tr:last-child td.text-right"
-        self.edit_button = f"{self.panel} div div.design-button:nth-child(1) > a"
-        self.checkout_button = f"{self.panel} div div.design-button:nth-child(2) > a"
+        self.page = page
+        self.panel = page.locator("div#cart-total-drawer")
+        self.title = self.page.locator("div#cart-total-drawer h5")
+        self.message = self.page.locator("div#cart-total-drawer p.text-center")
+        self.sub_total = self.page.locator("//td[text()='Sub-Total:']/following-sibling::td")
+        self.total = self.page.locator("//td[text()='Total:']/following-sibling::td")
+        self.edit_button = self.page.locator("div#cart-total-drawer a[href*='route=checkout/cart']")
+        self.checkout_button = self.page.locator("div#cart-total-drawer a[href*='route=checkout/checkout']")
+        self.x_button = self.page.locator("div#cart-total-drawer button.close")
 
     def is_visible(self):
-        return self.page.is_visible(self.panel)
+        return self.panel.is_visible()
     
-    def check_message(self, expected_message: str):
-        return self.page.inner_text(self.message) == expected_message
+    def get_message(self):
+        return self.message.inner_text()
 
-    def check_sub_total(self, expected_sub_total: str):
-        return self.page.inner_text(self.sub_total) == expected_sub_total
+    def get_sub_total(self):
+        return self.sub_total.inner_text()
     
-
-    def check_total(self, expected_total: str):
-        return self.page.inner_text(self.total) == expected_total
+    def get_total(self):
+        return self.total.inner_text()

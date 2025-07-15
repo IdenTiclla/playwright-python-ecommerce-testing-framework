@@ -3,6 +3,7 @@ import pytest
 import re
 from playwright.sync_api import expect
 from tests.base_test import BaseTest
+from utils.data_generator import generate_random_email, generate_random_first_name, generate_random_last_name, generate_random_phone_number, generate_random_password
 
 @pytest.mark.cart
 class TestCart(BaseTest):
@@ -15,28 +16,32 @@ class TestCart(BaseTest):
         self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
 
+        generated_password = generate_random_password()
+
         # Usamos un email único para cada ejecución de la prueba
-        unique_email = f"test.user.{int(time.time())}@example.com"
         self.register_page.register(
-            firstname="Brayan",
-            lastname="Mendoza",
-            email=unique_email,
-            telephone="+1234567890",
-            password="Test@123",
-            password_confirm="Test@123",
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
             subscribe_newsletter=True,
             accept_terms=True
         )
 
-        # expect() ya tiene auto-wait de 5 segundos - no necesitamos timeout explícito
-        expect(self.page.locator(self.home_page.cart_panel.panel)).not_to_be_visible()
-        self.home_page.click_on_my_cart_button()  # click() ya espera automáticamente
-        expect(self.page.locator(self.home_page.cart_panel.panel)).to_be_visible()
+        self.success_page.wait_for_page_load()
+        self.home_page.click_on_my_cart_button()
+        assert self.home_page.cart_panel.is_visible() == True
 
         # Usamos los métodos de la clase componente para las aserciones
-        assert self.home_page.cart_panel.check_message("Your shopping cart is empty!")
-        assert self.home_page.cart_panel.check_sub_total("$0.00")
-        assert self.home_page.cart_panel.check_total("$0.00")
+        message = self.home_page.cart_panel.get_message()
+        sub_total = self.home_page.cart_panel.get_sub_total()
+        total = self.home_page.cart_panel.get_total()
+        
+        assert message == "Your shopping cart is empty!"
+        assert sub_total == "$0.00"
+        assert total == "$0.00"
 
     def test_adding_product_to_cart_with_new_user(self):
         """
@@ -46,14 +51,14 @@ class TestCart(BaseTest):
         self.home_page.goto()  # goto() ya espera que la página cargue
         self.home_page.navbar_horizontal.click_my_account_option("Register")
         
-        unique_email = f"test.user.{int(time.time())}@example.com"
+        generated_password = generate_random_password()
         self.register_page.register(
-            firstname="Brayan",
-            lastname="Mendoza",
-            email=unique_email,
-            telephone="+1234567890",
-            password="Test@123",
-            password_confirm="Test@123",
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
             subscribe_newsletter=True,
             accept_terms=True
         )
@@ -91,17 +96,12 @@ class TestCart(BaseTest):
         
         # --- Parte 3: Verificar el contenido del carrito ---
         self.home_page.click_on_my_cart_button()
-        expect(self.page.locator(self.home_page.cart_panel.panel)).to_be_visible()
+        expect(self.home_page.cart_panel.panel).to_be_visible()
         
         # expect() con auto-wait
-        cart_message = self.page.locator(self.home_page.cart_panel.message)
-        expect(cart_message).not_to_be_visible()
-        
-        # Mejor usar expect() que text_content() para valores dinámicos
-        sub_total_locator = self.page.locator(self.home_page.cart_panel.sub_total)
-        total_locator = self.page.locator(self.home_page.cart_panel.total)
+        expect(self.home_page.cart_panel.message).not_to_be_visible()
         
         # expect() espera automáticamente hasta que el texto no sea $0.00
-        expect(sub_total_locator).not_to_have_text("$0.00")
-        expect(total_locator).not_to_have_text("$0.00")
+        expect(self.home_page.cart_panel.sub_total).not_to_have_text("$0.00")
+        expect(self.home_page.cart_panel.total).not_to_have_text("$0.00")
 
