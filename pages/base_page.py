@@ -3,7 +3,7 @@ from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
 from components.alert import Alert
 from components.sidebar_navigation import SidebarNavigation
-
+from components.cart_panel import CartPanel
 class BasePage:
     """
     La clase base para todos los Page Objects.
@@ -16,6 +16,7 @@ class BasePage:
         self.search_bar = SearchBar(page)
         self.alert_component = Alert(page)
         self.sidebar_navigation_component = SidebarNavigation(page)
+        self.cart_panel = CartPanel(page)
 
     def _visit(self, url: str):
         """Navega a una URL específica."""

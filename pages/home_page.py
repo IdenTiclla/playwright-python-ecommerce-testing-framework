@@ -1,20 +1,16 @@
-from components.search_bar import SearchBar
-from components.navbar_horizontal import NavbarHorizontal
 from playwright.sync_api import Page
 from components.carousel import Carousel
-from components.cart_panel import CartPanel
 from components.top_products import TopProducts
 from components.quick_view_modal import QuickViewModal
 from components.notification import Notification
-class HomePage:
+from pages.base_page import BasePage
+
+class HomePage(BasePage):
     URL = "https://ecommerce-playground.lambdatest.io/"
 
     def __init__(self, page: Page):
-        self.page = page
-        self.search_bar = SearchBar(page)
-        self.navbar_horizontal = NavbarHorizontal(page)
+        super().__init__(page)
         self.carousel = Carousel(page)
-        self.cart_panel = CartPanel(page)
         self.top_products = TopProducts(page)
         self.quick_view_modal = QuickViewModal(page)
         self.notification = Notification(page)
