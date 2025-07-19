@@ -31,4 +31,5 @@ class HomePage(BasePage):
         self.wishlist_button.click()
 
     def click_on_my_cart_button(self):
+        self.cart_button.scroll_into_view_if_needed()
         self.cart_button.click()

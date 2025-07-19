@@ -8,7 +8,7 @@ class CartPanel:
         self.message = self.page.locator("div#cart-total-drawer p.text-center")
         self.sub_total = self.page.locator("//td[text()='Sub-Total:']/following-sibling::td")
         self.total = self.page.locator("//td[text()='Total:']/following-sibling::td")
-        self.edit_button = self.page.locator("div#cart-total-drawer a[href*='route=checkout/cart']")
+        self.edit_cart_button = self.page.locator("div#cart-total-drawer a[href*='route=checkout/cart']")
         self.checkout_button = self.page.locator("div#cart-total-drawer a[href*='route=checkout/checkout']")
         self.x_button = self.page.locator("div#cart-total-drawer button.close")
 
@@ -23,3 +23,6 @@ class CartPanel:
     
     def get_total(self):
         return self.total.inner_text()
+    
+    def click_on_edit_cart_button(self):
+        self.edit_cart_button.click()

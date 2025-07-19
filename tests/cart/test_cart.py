@@ -126,3 +126,36 @@ class TestCart(BaseTest):
         
         cart_counter = self.home_page.header_actions.get_cart_count()
         assert cart_counter == "1"
+
+    def test_empty_shopping_cart_with_new_user(self):
+        """
+        Verifica que el carrito de compras está vacío para un usuario recién registrado.
+        """
+        # Registering an user
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+
+        generated_password = generate_random_password()
+
+        self.register_page.register(
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+
+        self.success_page.wait_for_page_load()
+
+        self.home_page.goto()
+
+        self.home_page.header_actions.click_on_cart_button()
+        self.home_page.cart_panel.click_on_edit_cart_button()
+
+        self.shopping_cart_page.wait_for_page_load()
+
+        assert self.shopping_cart_page.get_page_title() == "Shopping Cart"
+        assert self.shopping_cart_page.get_empty_cart_message() == "Your shopping cart is empty!"
