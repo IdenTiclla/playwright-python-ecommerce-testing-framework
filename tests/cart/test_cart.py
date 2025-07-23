@@ -215,5 +215,68 @@ class TestCart(BaseTest):
         total_price = self.shopping_cart_page.get_total_price(index=0)
         assert total_price == product_price
 
+    def test_edit_quantity_of_product_in_shopping_cart(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+
+        generated_password = generate_random_password()
+
+        self.register_page.register(
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+
+        self.success_page.wait_for_page_load()
+
+        self.success_page.navbar_horizontal.click_home_page()
+        
+        self.home_page.wait_for_page_load()
+
+        product_price = self.home_page.top_products.get_product_price(index=0)
+
+        self.home_page.top_products.add_product_to_cart(index=0)
+
+        self.home_page.header_actions.click_on_cart_button()
+        self.home_page.cart_panel.click_on_edit_cart_button()
+
+        self.shopping_cart_page.wait_for_page_load()
+
+        quantity_of_products_on_shopping_cart = self.shopping_cart_page.get_quantity_of_products()
+        assert quantity_of_products_on_shopping_cart == 1
+
+        unit_price = self.shopping_cart_page.get_unit_price(index=0)
+        total_price = self.shopping_cart_page.get_total_price(index=0)
+        assert product_price == unit_price
+        assert total_price == unit_price * quantity_of_products_on_shopping_cart
+
+        # Edit the quantity of the product in the shopping cart
+
+        self.shopping_cart_page.edit_quantity_of_product(index=0, quantity=2)
+        self.shopping_cart_page.wait_for_page_load()
+
+        # get alert message after updating the quantity of the product
+        alert_messages = self.shopping_cart_page.alert_component.get_alert_messages()
+        print("alert_messages: ", alert_messages)
+        # `assert "Success: You have modified your shopping cart!" in alert_text
+        # assert "Success: You have modified your shopping cart!" in any(alert_txt for alert_txt in alert_texts)
+        assert any("Success: You have modified your shopping cart!" in alert_message for alert_message in alert_messages)
+        quantity_of_products_on_shopping_cart_updated = self.shopping_cart_page.get_product_quantity(index=0)
+        assert quantity_of_products_on_shopping_cart_updated == 2
+
+        unit_price = self.shopping_cart_page.get_unit_price(index=0)
+        total_price = self.shopping_cart_page.get_total_price(index=0)
+        assert product_price == unit_price
+        assert total_price == unit_price * quantity_of_products_on_shopping_cart_updated
+
+        print("product_price: ", product_price)
+        print("unit_price: ", unit_price)
+        print("quantity_of_products_on_shopping_cart_updated: ", quantity_of_products_on_shopping_cart_updated)
+        print("total_price: ", total_price)
         
         

@@ -8,5 +8,5 @@ class Alert:
     def is_visible(self):
         return self.alert.is_visible()
 
-    def get_text(self):
-        return self.alert.text_content().strip()
+    def get_alert_messages(self):
+        return self.alert.all_text_contents()
