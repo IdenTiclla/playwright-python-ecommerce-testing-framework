@@ -7,6 +7,7 @@ class TopProducts:
         self.section = "div#entry_217977 > div[class*='entry-section']"
         self.product_cards = "div#entry_217977 .product-thumb"
         self.product_titles = f"{self.product_cards} h4 a"
+        self.product_prices = "div#entry_217977 .product-thumb div.price span"
         self.cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = "button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_cards} button[class*='btn-compare']"
@@ -98,3 +99,12 @@ class TopProducts:
 
     def add_product_to_compare(self, index=0):
         self.page.locator(self.compare_buttons).nth(index).click()
+
+
+    def get_product_name(self, index=0):
+        return self.page.locator(self.product_titles).nth(index).text_content().strip()
+    
+    def get_product_price(self, index=0):
+        product_price = self.page.locator(self.product_prices).nth(index).text_content().strip("$")
+        return round(float(product_price), 2)
+    
