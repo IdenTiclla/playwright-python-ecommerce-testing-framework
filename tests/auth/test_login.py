@@ -34,8 +34,8 @@ class TestLogin(BaseTest):
         # Verify error message is displayeds
         assert self.login_page.alert_component.is_visible() == True
         expected_error_message = "Warning: No match for E-Mail Address and/or Password."
-        actual_error_message = self.login_page.alert_component.get_text()
-        assert actual_error_message == expected_error_message
+        actual_error_messages = self.login_page.alert_component.get_alert_messages()
+        assert any(expected_error_message in alert_message for alert_message in actual_error_messages)
 
 
 
@@ -77,8 +77,8 @@ class TestLogin(BaseTest):
             # Verify error message is displayed
             assert self.login_page.alert_component.is_visible() == True
             expected_error_message = "Warning: No match for E-Mail Address and/or Password."
-            actual_error_message = self.login_page.alert_component.get_text()
-            assert actual_error_message == expected_error_message
+            actual_error_messages = self.login_page.alert_component.get_alert_messages()
+            assert any(expected_error_message in alert_message for alert_message in actual_error_messages)
 
         self.login_page.login(
                 email=email,
@@ -88,5 +88,5 @@ class TestLogin(BaseTest):
         # Verify error message is displayed
         assert self.login_page.alert_component.is_visible() == True
         expected_error_message = "Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour."
-        actual_error_message = self.login_page.alert_component.get_text()
-        assert actual_error_message == expected_error_message
+        actual_error_messages = self.login_page.alert_component.get_alert_messages()
+        assert any(expected_error_message in alert_message for alert_message in actual_error_messages)

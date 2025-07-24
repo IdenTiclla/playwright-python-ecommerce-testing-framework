@@ -1,7 +1,8 @@
 from playwright.sync_api import Page, expect
 from components.search_bar import SearchBar
+from pages.base_page import BasePage
 
-class SearchPage:
+class SearchPage(BasePage):
     def __init__(self, page: Page):
         self.page = page
 
@@ -100,5 +101,24 @@ class SearchPage:
         expect(self.product_items.first).to_be_visible()
         prices = self.get_product_prices()
         return prices == sorted(prices, reverse=True)
+    
+    def get_product_name(self, index: int):
+        """Get the name of a product"""
+        return self.product_items.nth(index).locator("h4 a").text_content()
+    
+    def get_product_price(self, index: int):
+        """Get the price of a product"""
+        price = self.product_items.nth(index).locator("div.price").text_content() 
+        return round(float(price.replace("$", "")), 2)
+    
+
+    def hover_over_product(self, index: int):
+        """Hover over a product"""
+        self.product_items.nth(index).hover()
+    
+    def add_product_to_cart(self, index: int):
+        """Add a product to the cart"""
+        self.hover_over_product(index)
+        self.product_items.nth(index).locator("button.btn-cart").click()
 
     

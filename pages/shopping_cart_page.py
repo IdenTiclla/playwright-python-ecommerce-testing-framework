@@ -40,6 +40,7 @@ class ShoppingCartPage(BasePage):
     
     def get_total_price(self, index):
         total_price = self.page.locator(self.products).locator("td:nth-of-type(6)").nth(index).text_content().strip("$")
+        total_price = total_price.replace(",", "")
         return round(float(total_price), 2)
     
     def click_on_edit_quantity_button(self, index):

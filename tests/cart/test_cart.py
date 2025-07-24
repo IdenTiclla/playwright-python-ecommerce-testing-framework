@@ -278,5 +278,72 @@ class TestCart(BaseTest):
         print("unit_price: ", unit_price)
         print("quantity_of_products_on_shopping_cart_updated: ", quantity_of_products_on_shopping_cart_updated)
         print("total_price: ", total_price)
-        
-        
+
+    def test_add_product_to_cart_from_search_results(self):
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+
+        generated_password = generate_random_password()
+
+        self.register_page.register(
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+
+        self.success_page.wait_for_page_load()
+        self.success_page.navbar_horizontal.click_home_page()
+
+        self.home_page.search_bar.search("")
+
+        self.search_page.wait_for_page_load()
+
+        product_name = self.search_page.get_product_name(index=1) 
+        product_price = self.search_page.get_product_price(index=1)
+
+        self.search_page.add_product_to_cart(index=1)
+
+        self.home_page.notification.click_on_view_cart_button()
+
+        self.shopping_cart_page.wait_for_page_load()
+        product_name_on_shopping_cart = self.shopping_cart_page.get_product_name(index=0)
+        assert product_name in product_name_on_shopping_cart
+
+        product_quantity = self.shopping_cart_page.get_product_quantity(index=0)
+        unit_price = self.shopping_cart_page.get_unit_price(index=0)
+        total_price = self.shopping_cart_page.get_total_price(index=0)
+
+        assert product_quantity == 1
+        assert unit_price == product_price
+        assert total_price == unit_price * product_quantity
+
+        self.shopping_cart_page.wait_for_page_load()
+
+        self.shopping_cart_page.edit_quantity_of_product(index=0, quantity=2)
+
+        product_quantity = self.shopping_cart_page.get_product_quantity(index=0)
+        unit_price = self.shopping_cart_page.get_unit_price(index=0)
+        total_price = self.shopping_cart_page.get_total_price(index=0)
+
+        assert product_quantity == 2
+        assert unit_price == product_price
+        assert total_price == unit_price * product_quantity
+
+        self.shopping_cart_page.wait_for_page_load()
+
+
+        self.shopping_cart_page.edit_quantity_of_product(index=0, quantity=3)
+
+        product_quantity = self.shopping_cart_page.get_product_quantity(index=0)
+        unit_price = self.shopping_cart_page.get_unit_price(index=0)
+        total_price = self.shopping_cart_page.get_total_price(index=0)
+
+
+        assert product_quantity == 3
+        assert unit_price == product_price
+        assert total_price == unit_price * product_quantity

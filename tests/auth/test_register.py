@@ -99,8 +99,9 @@ class TestRegister(BaseTest):
             accept_terms=False
         )
         # Verify that the error message is visible
-        error_message = self.register_page.alert_component.get_text()
-        assert error_message == "Warning: You must agree to the Privacy Policy!", f"Expected error message to be 'Warning: You must agree to the Privacy Policy!', but got '{error_message}'"
+        actual_alert_messages = self.register_page.alert_component.get_alert_messages()
+        expected_error_message = "Warning: You must agree to the Privacy Policy!"
+        assert any(expected_error_message in alert_message for alert_message in actual_alert_messages)
 
 
     def test_edit_account_default_values(self):

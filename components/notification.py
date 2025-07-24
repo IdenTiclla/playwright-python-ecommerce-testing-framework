@@ -32,3 +32,7 @@ class Notification:
     
     def get_register_button_text(self):
         return self.register_button.inner_text()
+    
+    def click_on_view_cart_button(self):
+        self.view_cart_button.click()
+        
