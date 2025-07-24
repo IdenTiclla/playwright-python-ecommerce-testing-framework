@@ -302,9 +302,8 @@ class TestWishList(BaseTest):
     
         # Verify alert is visible
         assert self.wishlist_page.alert_component.is_visible(), "Alert should be visible"
-        assert "Success: You have modified your wish list!" in self.wishlist_page.alert_component.get_text(), "Alert text should be 'Success: You have modified your wish list!'"
-        alert_text = self.wishlist_page.alert_component.get_text()
-        print(alert_text)
+        alert_messages = self.wishlist_page.alert_component.get_alert_messages()
+        assert any("Success: You have modified your wish list!" in alert_message for alert_message in alert_messages)
         
         # Verify product was removed
         new_count = self.wishlist_page.get_wishlist_items_count()

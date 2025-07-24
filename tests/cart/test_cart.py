@@ -203,8 +203,8 @@ class TestCart(BaseTest):
         assert product_name in product_name_on_shopping_cart
 
         # Verificamos que el producto no está disponible en la cantidad deseada o no está en stock
-        alert_text = self.shopping_cart_page.alert_component.get_text()
-        assert "Products marked with *** are not available in the desired quantity or not in stock!" in alert_text
+        alert_messages = self.shopping_cart_page.alert_component.get_alert_messages()
+        assert any("Products marked with *** are not available in the desired quantity or not in stock!" in alert_message for alert_message in alert_messages)
 
         product_quantity = self.shopping_cart_page.get_product_quantity(index=0)
         assert product_quantity == 1
