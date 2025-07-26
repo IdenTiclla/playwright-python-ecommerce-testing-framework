@@ -67,6 +67,8 @@ class TestCart(BaseTest):
         # Adding a product to the cart
         self.success_page.wait_for_page_load()
         self.home_page.goto()
+        self.home_page.wait_for_page_load()
+        
         self.home_page.top_products.add_product_to_cart(index=0)
         
         # Verifying the notification - USANDO expect() de Playwright
@@ -94,6 +96,8 @@ class TestCart(BaseTest):
     def test_adding_product_to_cart_from_quick_view_modal(self):
 
         self.home_page.goto()
+        self.home_page.wait_for_page_load()
+        
         self.home_page.navbar_horizontal.click_my_account_option("Register")
 
         generated_password = generate_random_password()
@@ -114,6 +118,8 @@ class TestCart(BaseTest):
         assert cart_counter == "0"
 
         self.home_page.goto()
+        self.home_page.wait_for_page_load()
+        
         self.home_page.top_products.show_quick_view(index=3)
         self.home_page.quick_view_modal.add_to_cart()
 

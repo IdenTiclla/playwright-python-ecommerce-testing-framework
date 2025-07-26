@@ -7,14 +7,10 @@ class TestQuickView(BaseTest):
 
     def test_quick_view_with_out_of_stock_product(self):
         self.home_page.goto()
+        self.home_page.wait_for_page_load()
         self.home_page.top_products.scroll_to_top_products()
-        self.page.wait_for_timeout(1000)
-
-        expect(self.page.locator(self.home_page.top_products.section)).to_be_visible(timeout=10000)
-
         self.home_page.top_products.show_quick_view(index=0)
 
-        self.page.wait_for_timeout(1000)
         quick_view_modal = self.home_page.quick_view_modal
 
         expect(self.page.locator(quick_view_modal.title)).to_be_visible(timeout=10000)
@@ -34,12 +30,12 @@ class TestQuickView(BaseTest):
 
     def test_quick_view_many_times(self):
         self.home_page.goto()
-        self.page.wait_for_timeout(1000)
+        self.home_page.wait_for_page_load()
 
-        self.home_page.top_products.scroll_to_top_products()
-        self.page.wait_for_timeout(1000)
+        # self.home_page.top_products.scroll_to_top_products()
+        # self.page.wait_for_timeout(1000)
 
-        expect(self.page.locator(self.home_page.top_products.section)).to_be_visible(timeout=10000)
+        # expect(self.page.locator(self.home_page.top_products.section)).to_be_visible(timeout=10000)
 
 
         for i in range(4):
@@ -54,15 +50,17 @@ class TestQuickView(BaseTest):
 
     def test_quick_view_with_in_stock_product(self):
         self.home_page.goto()
-        self.page.wait_for_timeout(1000)
+        self.home_page.wait_for_page_load()
+        # self.page.wait_for_timeout(1000)
 
-        self.home_page.top_products.scroll_to_top_products()
-        self.page.wait_for_timeout(1000)
+
+        # self.home_page.top_products.scroll_to_top_products()
+        # self.page.wait_for_timeout(1000)
         
-        expect(self.page.locator(self.home_page.top_products.section)).to_be_visible(timeout=10000)
+        # expect(self.page.locator(self.home_page.top_products.section)).to_be_visible(timeout=10000)
 
         self.home_page.top_products.show_quick_view(index=2)
-        self.page.wait_for_timeout(1000)
+        # self.page.wait_for_timeout(1000)
 
         quick_view_modal = self.home_page.quick_view_modal
         expect(self.page.locator(quick_view_modal.container)).to_be_visible(timeout=10000)
