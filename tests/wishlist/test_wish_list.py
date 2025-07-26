@@ -1,7 +1,7 @@
+import pytest
 from playwright.sync_api import expect
 from tests.base_test import BaseTest
-import random
-import pytest
+from utils.data_generator import generate_random_first_name, generate_random_last_name, generate_random_email, generate_random_phone_number, generate_random_password
 
 class TestWishList(BaseTest):
     def test_add_to_wishlist_from_top_products_without_login(self):
@@ -96,11 +96,11 @@ class TestWishList(BaseTest):
         """Test wishlist page with new user account and no products"""
         self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
-        random_firstname = f"John{random.randint(1, 1000000)}"
-        random_lastname = f"Doe{random.randint(1, 1000000)}"
-        random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
-        random_telephone = f"1234567890{random.randint(1, 1000000)}"
-        random_password = "TestPassword123!"
+        random_firstname = generate_random_first_name()
+        random_lastname = generate_random_last_name()
+        random_email = generate_random_email()
+        random_telephone = generate_random_phone_number()
+        random_password = generate_random_password()
         self.register_page.register(
             firstname=random_firstname,
             lastname=random_lastname,
@@ -126,11 +126,11 @@ class TestWishList(BaseTest):
         """Test that all main page elements are visible"""
         self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
-        random_firstname = f"John{random.randint(1, 1000000)}"
-        random_lastname = f"Doe{random.randint(1, 1000000)}"
-        random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
-        random_telephone = f"1234567890{random.randint(1, 1000000)}"
-        random_password = "TestPassword123!"
+        random_firstname = generate_random_first_name()
+        random_lastname = generate_random_last_name()
+        random_email = generate_random_email()
+        random_telephone = generate_random_phone_number()
+        random_password = generate_random_password()
         self.register_page.register(
             firstname=random_firstname,
             lastname=random_lastname,
@@ -156,11 +156,11 @@ class TestWishList(BaseTest):
         """Test that wishlist table has correct headers"""
         self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
-        random_firstname = f"John{random.randint(1, 1000000)}"
-        random_lastname = f"Doe{random.randint(1, 1000000)}"
-        random_email = f"john.doe{random.randint(1, 1000000)}@example.com"
-        random_telephone = f"1234567890{random.randint(1, 1000000)}"
-        random_password = "TestPassword123!"
+        random_firstname = generate_random_first_name()
+        random_lastname = generate_random_last_name()
+        random_email = generate_random_email()
+        random_telephone = generate_random_phone_number()
+        random_password = generate_random_password()
         self.register_page.register(
             firstname=random_firstname,
             lastname=random_lastname,
