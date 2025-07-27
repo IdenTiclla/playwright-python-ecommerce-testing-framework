@@ -51,3 +51,8 @@ class ShoppingCartPage(BasePage):
         input_quantity.clear()
         input_quantity.fill(str(quantity))
         self.click_on_edit_quantity_button(index)
+
+    def remove_product_from_cart(self, index):
+        remove_button = self.page.locator(self.products).nth(index).locator("td:nth-of-type(4) button[class*='btn-danger']")
+        remove_button.click()
+        self.page.wait_for_load_state("networkidle", timeout=10000)

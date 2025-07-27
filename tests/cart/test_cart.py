@@ -353,3 +353,39 @@ class TestCart(BaseTest):
         assert product_quantity == 3
         assert unit_price == product_price
         assert total_price == unit_price * product_quantity
+
+    def test_remove_product_from_cart(self):
+        self.home_page.goto()
+        self.home_page.wait_for_page_load()
+
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+        self.register_page.wait_for_page_load()
+        
+        # Registering an user
+        generated_password = generate_random_password()
+        self.register_page.register(
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=generated_password,
+            password_confirm=generated_password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+
+        self.success_page.wait_for_page_load()
+
+        self.success_page.navbar_horizontal.click_home_page()
+
+        self.home_page.wait_for_page_load()
+
+        self.home_page.top_products.add_product_to_cart(index=0)
+
+        self.home_page.notification.click_on_view_cart_button()
+
+        self.shopping_cart_page.wait_for_page_load()
+
+        self.shopping_cart_page.remove_product_from_cart(index=0)
+
+        assert self.shopping_cart_page.get_empty_cart_message() == "Your shopping cart is empty!"
