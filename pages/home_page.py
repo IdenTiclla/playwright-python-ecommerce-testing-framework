@@ -1,8 +1,10 @@
 from playwright.sync_api import Page
 from components.carousel import Carousel
 from components.top_products import TopProducts
+from components.top_collection import TopCollection
 from components.quick_view_modal import QuickViewModal
 from components.notification import Notification
+from components.cart_panel import CartPanel
 from pages.base_page import BasePage
 from components.header_actions import HeaderActions
 
@@ -13,8 +15,10 @@ class HomePage(BasePage):
         super().__init__(page)
         self.carousel = Carousel(page)
         self.top_products = TopProducts(page)
+        self.top_collection = TopCollection(page)
         self.quick_view_modal = QuickViewModal(page)
         self.notification = Notification(page)
+        self.cart_panel = CartPanel(page)
         self.header_actions = HeaderActions(page)
 
 
