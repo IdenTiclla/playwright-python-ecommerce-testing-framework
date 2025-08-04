@@ -14,4 +14,5 @@ dependencies = [
 [tool.pytest.ini_options]
 markers = [
     "cart: tests relacionados con el carrito de compras",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
