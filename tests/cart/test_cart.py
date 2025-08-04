@@ -8,11 +8,8 @@ from utils.data_generator import generate_random_email, generate_random_first_na
 @pytest.mark.cart
 class TestCart(BaseTest):
 
-    def test_empty_cart_with_new_user(self):
-        """
-        Verifica que el carrito de compras está vacío para un usuario recién registrado.
-        """
-        # Flujo de la prueba
+    @pytest.fixture(autouse=True)
+    def setup_cart_test(self):
         self.home_page.goto()
         self.home_page.navbar_horizontal.click_my_account_option("Register")
 
@@ -29,8 +26,14 @@ class TestCart(BaseTest):
             subscribe_newsletter=True,
             accept_terms=True
         )
-
         self.success_page.wait_for_page_load()
+
+
+    def test_empty_cart_with_new_user(self):
+        """
+        Verifica que el carrito de compras está vacío para un usuario recién registrado.
+        """
+        # Flujo de la prueba
         assert self.home_page.header_actions.get_cart_count() == "0"
         self.home_page.header_actions.click_on_cart_button()
         assert self.home_page.cart_panel.is_visible() == True
@@ -41,31 +44,13 @@ class TestCart(BaseTest):
         total = self.home_page.cart_panel.get_total()
         
         assert message == "Your shopping cart is empty!"
-        assert sub_total == "$0.00"
-        assert total == "$0.00"
+        assert sub_total == 0.0
+        assert total == 0.0
 
     def test_adding_product_to_cart_with_new_user(self):
         """
         Verifica que se puede añadir un producto al carrito después de registrar un nuevo usuario.
         """
-        # Registering an user
-        self.home_page.goto()
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-        
-        generated_password = generate_random_password()
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
-
-        # Adding a product to the cart
-        self.success_page.wait_for_page_load()
         self.home_page.goto()
         self.home_page.wait_for_page_load()
         
@@ -89,30 +74,11 @@ class TestCart(BaseTest):
         
         # Después de agregar un producto, el carrito NO debería estar vacío
         # Verificamos que los totales no sean $0.00
-        assert self.home_page.cart_panel.get_sub_total() != "$0.00"
-        assert self.home_page.cart_panel.get_total() != "$0.00"
+        assert self.home_page.cart_panel.get_sub_total() != 0.0
+        assert self.home_page.cart_panel.get_total() != 0.0
 
 
     def test_adding_product_to_cart_from_quick_view_modal(self):
-
-        self.home_page.goto()
-        self.home_page.wait_for_page_load()
-        
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-
-        generated_password = generate_random_password()
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
-
-        self.success_page.wait_for_page_load()
 
         cart_counter = self.home_page.header_actions.get_cart_count()
         assert cart_counter == "0"
@@ -137,24 +103,6 @@ class TestCart(BaseTest):
         """
         Verifica que el carrito de compras está vacío para un usuario recién registrado.
         """
-        # Registering an user
-        self.home_page.goto()
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-
-        generated_password = generate_random_password()
-
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
-
-        self.success_page.wait_for_page_load()
 
         self.home_page.goto()
 
@@ -167,23 +115,6 @@ class TestCart(BaseTest):
         assert self.shopping_cart_page.get_empty_cart_message() == "Your shopping cart is empty!"
 
     def test_shopping_cart_with_new_user_and_product_in_cart(self):
-        self.home_page.goto()
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-
-        generated_password = generate_random_password()
-
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
-
-        self.success_page.wait_for_page_load()
 
         self.success_page.navbar_horizontal.click_home_page()
         
@@ -222,23 +153,6 @@ class TestCart(BaseTest):
         assert total_price == product_price
 
     def test_edit_quantity_of_product_in_shopping_cart(self):
-        self.home_page.goto()
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-
-        generated_password = generate_random_password()
-
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
-
-        self.success_page.wait_for_page_load()
 
         self.success_page.navbar_horizontal.click_home_page()
         
@@ -286,21 +200,6 @@ class TestCart(BaseTest):
         print("total_price: ", total_price)
 
     def test_add_product_to_cart_from_search_results(self):
-        self.home_page.goto()
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-
-        generated_password = generate_random_password()
-
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
 
         self.success_page.wait_for_page_load()
         self.success_page.navbar_horizontal.click_home_page()
@@ -355,24 +254,6 @@ class TestCart(BaseTest):
         assert total_price == unit_price * product_quantity
 
     def test_remove_product_from_cart(self):
-        self.home_page.goto()
-        self.home_page.wait_for_page_load()
-
-        self.home_page.navbar_horizontal.click_my_account_option("Register")
-        self.register_page.wait_for_page_load()
-        
-        # Registering an user
-        generated_password = generate_random_password()
-        self.register_page.register(
-            firstname=generate_random_first_name(),
-            lastname=generate_random_last_name(),
-            email=generate_random_email(),
-            telephone=generate_random_phone_number(),
-            password=generated_password,
-            password_confirm=generated_password,
-            subscribe_newsletter=True,
-            accept_terms=True
-        )
 
         self.success_page.wait_for_page_load()
 
