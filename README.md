@@ -68,17 +68,47 @@ This project demonstrates best practices for browser automation using Playwright
 ```
 practicing-playwright-python/
 ├── components/
+│   ├── alert.py
+│   ├── base_component.py
+│   ├── carousel.py
+│   ├── cart_panel.py
+│   ├── header_actions.py
+│   ├── navbar_horizontal.py
+│   ├── notification.py
+│   ├── quick_view_modal.py
 │   ├── search_bar.py
-│   └── navbar_horizontal.py
+│   ├── sidebar_navigation.py
+│   ├── top_collection.py
+│   └── top_products.py
 ├── pages/
-│   └── home_page.py
+│   ├── account_edit_page.py
+│   ├── account_page.py
+│   ├── base_page.py
+│   ├── cart_page.py
+│   ├── home_page.py
+│   ├── login_page.py
+│   ├── register_page.py
+│   ├── search_page.py
+│   ├── shopping_cart_page.py
+│   ├── success_page.py
+│   └── wishlist_page.py
 ├── tests/
+│   ├── auth/
+│   │   ├── test_account_edit.py
+│   │   ├── test_login.py
+│   │   └── test_register.py
+│   ├── base_test.py
+│   ├── carousel/
+│   ├── cart/
+│   ├── navbar_horizontal/
+│   ├── quick_view/
 │   ├── search/
 │   │   └── test_search.py
-│   └── ...
+│   └── wishlist/
 ├── conftest.py
+├── pyproject.toml
 ├── README.md
-└── ...
+└── uv.lock
 ```
 
 - **components/**: Reusable UI components (e.g., search bar, navbar).
@@ -103,48 +133,88 @@ practicing-playwright-python/
 
 `tests/search/test_search.py`:
 ```python
-import pytest
-from pages.home_page import HomePage
+class TestSearch:
+    @pytest.fixture
+    def search_page(self, page: Page) -> SearchPage:
+        return SearchPage(page)
+    
+    @pytest.fixture
+    def home_page(self, page: Page) -> HomePage:
+        return HomePage(page)
 
-def test_search_functionality(page):
-    home = HomePage(page)
-    home.goto()
-    home.search("iMac")
-    page.wait_for_selector('.product-thumb')
-    titles = page.locator('.product-thumb h4 a').all_text_contents()
-    assert any("iMac" in title for title in titles)
+    def test_search_functionality(self, search_page: SearchPage, home_page: HomePage):
+        home_page.goto()
+        search_page.perform_search("iMac")
+        
+        search_page.page.wait_for_load_state("domcontentloaded")
+        count = search_page.page.locator(search_page.product_titles).count()
+        assert count > 0, "Expected at least one search result"
+
+        results = search_page.get_search_results()
+        assert any("iMac" in title for title in results), "Expected to find iMac in search results"
 ```
 
 ### Example Page Object: HomePage
 
 `pages/home_page.py`:
 ```python
+from playwright.sync_api import Page
+from pages.base_page import BasePage
 from components.search_bar import SearchBar
 from components.navbar_horizontal import NavbarHorizontal
-class HomePage:
+from components.carousel import Carousel
+from components.top_collection import TopCollection
+from components.top_products import TopProducts
+
+class HomePage(BasePage):
     URL = "https://ecommerce-playground.lambdatest.io/"
-    def __init__(self, page):
-        self.page = page
+    
+    def __init__(self, page: Page):
+        super().__init__(page)
         self.search_bar = SearchBar(page)
         self.navbar_horizontal = NavbarHorizontal(page)
-    def goto(self):
+        self.carousel = Carousel(page)
+        self.top_collection = TopCollection(page)
+        self.top_products = TopProducts(page)
+        
+    def goto(self) -> None:
+        """
+        Navigate to the home page
+        """
         self.page.goto(self.URL)
-    def search(self, term):
-        self.search_bar.search(term)
+        self.page.wait_for_load_state("domcontentloaded")
 ```
 
 ### Example Component: SearchBar
 
 `components/search_bar.py`:
 ```python
-class SearchBar:
-    SEARCH_INPUT = 'input[name="search"]'
-    SEARCH_BUTTON = 'button[type="submit"]'
-    def __init__(self, page):
-        self.page = page
-    def search(self, term):
-        self.page.fill(self.SEARCH_INPUT, term)
-        self.page.click(self.SEARCH_BUTTON)
+from playwright.sync_api import Page, Locator
+from components.base_component import BaseComponent
+
+class SearchBar(BaseComponent):
+    def __init__(self, page: Page):
+        super().__init__(page)
+        self._search_input = 'input[name="search"]'
+        self._search_button = 'button[type="submit"]'
+        
+    @property
+    def search_input(self) -> Locator:
+        return self.page.locator(self._search_input)
+        
+    @property 
+    def search_button(self) -> Locator:
+        return self.page.locator(self._search_button)
+
+    def perform_search(self, text: str) -> None:
+        """
+        Performs a search using the search bar
+        Args:
+            text: The text to search for
+        """
+        self.search_input.fill(text)
+        self.search_button.click()
+        self.page.wait_for_load_state("domcontentloaded")
 ```
 
 ### Pytest Fixtures
@@ -152,20 +222,35 @@ class SearchBar:
 `conftest.py`:
 ```python
 import pytest
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, Page, Browser
+from typing import Generator
 
-@pytest.fixture(scope="function")
-def browser():
+@pytest.fixture(scope="session")
+def browser() -> Generator[Browser, None, None]:
+    """
+    Creates a browser instance that is shared across all tests in the session.
+    """
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)  # Set to True for headless mode
+        browser = p.chromium.launch(headless=False)
         yield browser
         browser.close()
 
 @pytest.fixture(scope="function")
-def page(browser):
-    page = browser.new_page()
+def page(browser: Browser) -> Generator[Page, None, None]:
+    """
+    Creates a new page for each test.
+    
+    Args:
+        browser: The browser instance to create the page in
+        
+    Returns:
+        Generator[Page, None, None]: The page instance
+    """
+    context = browser.new_context()
+    page = context.new_page()
     yield page
     page.close()
+    context.close()
 ```
 
 ## Headless Mode
