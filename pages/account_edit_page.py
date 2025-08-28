@@ -1,9 +1,13 @@
 from playwright.sync_api import Page
 
 from pages.base_page import BasePage
+from utils.config import BASE_URL
 
 class AccountEditPage(BasePage):
-    URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/edit"
+    
+    @property
+    def url(self):
+        return f"{BASE_URL}/index.php?route=account/edit"
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -16,7 +20,7 @@ class AccountEditPage(BasePage):
         self.breadcrumb = page.locator(".breadcrumb li.active")
 
     def navigate(self):
-        self._visit(self.URL)
+        self._visit(self.url)
 
     def is_loaded(self):
         return self.breadcrumb.is_visible()

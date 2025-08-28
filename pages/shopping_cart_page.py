@@ -1,8 +1,12 @@
 from pages.base_page import BasePage
 from playwright.sync_api import Page
+from utils.config import BASE_URL
 
 class ShoppingCartPage(BasePage):
-    URL = "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"
+    
+    @property
+    def url(self):
+        return f"{BASE_URL}/index.php?route=checkout/cart"
 
     def __init__(self, page: Page):
         super().__init__(page)

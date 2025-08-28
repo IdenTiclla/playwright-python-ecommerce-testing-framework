@@ -1,11 +1,12 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
+from utils.config import BASE_URL
 
 class LoginPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
         # URLs
-        self.login_url = "https://ecommerce-playground.lambdatest.io/index.php?route=account/login"
+        self.login_url = f"{BASE_URL}/index.php?route=account/login"
         
         # Locators
         self.email_input = page.locator("input[name='email']")

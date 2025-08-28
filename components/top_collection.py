@@ -7,14 +7,14 @@ class TopCollection(BasePage):
         self.page = page
         # Based on the pattern from TopProducts, we'll try multiple selector strategies
         # First try: Look for a specific entry ID pattern like TopProducts uses
-        self.section = self.page.locator("div#mz-product-listing-39217984")
+        self.section = self.page.locator("div#mz-product-listing-39218404")
         
         # Fallback: Use a more specific approach targeting the actual section
         if not self.section.count():
             self.section = self.page.locator("div:has-text('TOP COLLECTION')").filter(has=self.page.locator(".nav-tabs, .product-thumb")).first
         
         # Product items within the section
-        self.product_items = self.page.locator("div#mz-product-listing-39217984 div.product-thumb")
+        self.product_items = self.page.locator("div#mz-product-listing-39218404 div.product-thumb")
         
         # Tab selectors - these are the POPULAR, LATEST, BEST SELLER tabs
         # Try multiple approaches for finding tabs

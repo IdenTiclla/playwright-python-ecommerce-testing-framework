@@ -2,6 +2,7 @@ import os
 from playwright.sync_api import expect
 from tests.base_test import BaseTest
 from utils.data_generator import generate_random_email, generate_random_password
+from utils.config import BASE_URL
 class TestLogin(BaseTest):
     
     def test_user_can_login(self):
@@ -17,9 +18,9 @@ class TestLogin(BaseTest):
         )
         
         # Verify successful login (redirected to account page)
-        expect(self.login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/account")
+        expect(self.login_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/account")
 
-        assert self.login_page.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
+        assert self.login_page.page.url == f"{BASE_URL}/index.php?route=account/account"
 
     def test_invalid_login(self):
         # Navigate to login page
@@ -47,7 +48,7 @@ class TestLogin(BaseTest):
         self.login_page.click_forgotten_password()
         
         # Verify redirect to forgotten password page
-        expect(self.login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/forgotten")
+        expect(self.login_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/forgotten")
         
     def test_go_to_register(self):
         # Navigate to login page
@@ -57,7 +58,7 @@ class TestLogin(BaseTest):
         self.login_page.click_register()
         
         # Verify redirect to register page
-        expect(self.login_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/register")
+        expect(self.login_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/register")
 
     def test_login_attempts_limit(self):
         # Navigate to login page

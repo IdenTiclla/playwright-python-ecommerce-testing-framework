@@ -233,6 +233,7 @@ class TestWishList(BaseTest):
         # logs
         print(product_details)
         
+        # Note: This test checks a specific image URL that should be updated when the application is tested against different environments
         assert product_details["image_src"] == "https://ecommerce-playground.lambdatest.io/image/cache/catalog/maza/demo/mz_poco/megastore-2/product/10-47x47.webp", "Product image should be the same as the one in the wishlist"
         assert product_details["product_name"] == "iMac", "Product name should be the same as the one in the wishlist"
         assert product_details["model"] == "Product 14", "Product model should be the same as the one in the wishlist"

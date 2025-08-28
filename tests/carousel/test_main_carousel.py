@@ -26,6 +26,9 @@ class TestMainCarousel(BaseTest):
         indicator_count = self.carousel.get_indicator_count()
         assert indicator_count > 0, "Carousel should have slide indicators"
         assert indicator_count == slide_count, "Number of indicators should match number of slides"
+
+        # Hover over the carousel
+        self.carousel.carousel_container.hover()
         
         # Verify navigation buttons are visible
         assert self.carousel.are_navigation_buttons_visible(), "Navigation buttons should be visible"
@@ -47,6 +50,10 @@ class TestMainCarousel(BaseTest):
     
     def test_next_slide_navigation(self):
         """Test navigation to next slide using next button."""
+        # Disable auto-play to prevent interference
+        self.carousel.disable_auto_play()
+        
+        # Start from slide 1 (not 0) to test previous navigation without wrap-around issues
         initial_slide_index = self.carousel.get_active_slide_index()
         slide_count = self.carousel.get_slide_count()
         

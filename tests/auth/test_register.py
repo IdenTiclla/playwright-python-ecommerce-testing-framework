@@ -1,6 +1,7 @@
 import time
 from tests.base_test import BaseTest
 from playwright.sync_api import expect
+from utils.config import BASE_URL
 from utils.data_generator import generate_random_email, generate_random_first_name, generate_random_last_name, generate_random_phone_number, generate_random_password
 class TestRegister(BaseTest):
     
@@ -23,7 +24,7 @@ class TestRegister(BaseTest):
         # Verify registration success (you can add appropriate assertions here)
         # For example, check if redirected to success page or account page
 
-        expect(self.register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/success")
+        expect(self.register_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/success")
         # check that the url contain
         assert "success" in self.register_page.page.url
         expect(self.register_page.page.locator("h1")).to_have_text("Your Account Has Been Created!")
@@ -51,7 +52,7 @@ class TestRegister(BaseTest):
         self.register_page.go_to_login()
         
         # Verify redirect to login page
-        expect(self.register_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/login")
+        expect(self.register_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/login")
 
     def test_password_confirmation_mismatch(self):
         # Navigate to register page
@@ -132,7 +133,7 @@ class TestRegister(BaseTest):
         self.account_edit_page.navigate()
 
         # assert that the url is correct
-        expect(self.account_edit_page.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=account/edit")
+        expect(self.account_edit_page.page).to_have_url(f"{BASE_URL}/index.php?route=account/edit")
         
         # wait for page to be fully loaded
         self.account_edit_page.page.wait_for_load_state("networkidle")

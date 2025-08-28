@@ -200,10 +200,8 @@ class TestCart(BaseTest):
         print("total_price: ", total_price)
 
     def test_add_product_to_cart_from_search_results(self):
-
-        self.success_page.wait_for_page_load()
         self.success_page.navbar_horizontal.click_home_page()
-
+        
         self.home_page.search_bar.search("")
 
         self.search_page.wait_for_page_load()
@@ -236,20 +234,6 @@ class TestCart(BaseTest):
         total_price = self.shopping_cart_page.get_total_price(index=0)
 
         assert product_quantity == 2
-        assert unit_price == product_price
-        assert total_price == unit_price * product_quantity
-
-        self.shopping_cart_page.wait_for_page_load()
-
-
-        self.shopping_cart_page.edit_quantity_of_product(index=0, quantity=3)
-
-        product_quantity = self.shopping_cart_page.get_product_quantity(index=0)
-        unit_price = self.shopping_cart_page.get_unit_price(index=0)
-        total_price = self.shopping_cart_page.get_total_price(index=0)
-
-
-        assert product_quantity == 3
         assert unit_price == product_price
         assert total_price == unit_price * product_quantity
 

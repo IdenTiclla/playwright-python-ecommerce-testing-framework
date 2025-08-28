@@ -3,8 +3,12 @@ from components.navbar_horizontal import NavbarHorizontal
 from components.search_bar import SearchBar
 from components.sidebar_navigation import SidebarNavigation
 from pages.base_page import BasePage
+from utils.config import BASE_URL
 class WishListPage(BasePage):
-    URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/wishlist"
+    
+    @property
+    def url(self):
+        return f"{BASE_URL}/index.php?route=account/wishlist"
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -35,7 +39,7 @@ class WishListPage(BasePage):
 
     def goto(self):
         """Navigate to the wishlist page"""
-        self.page.goto(self.URL)
+        self.page.goto(self.url)
 
     def get_breadcrumb_text(self) -> str:
         """Get the breadcrumb navigation text"""

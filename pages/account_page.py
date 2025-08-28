@@ -1,8 +1,12 @@
 from playwright.sync_api import Page
 from components.sidebar_navigation import SidebarNavigation
+from utils.config import BASE_URL
 
 class AccountPage:
-    URL = "https://ecommerce-playground.lambdatest.io/index.php?route=account/account"
+    
+    @property
+    def url(self):
+        return f"{BASE_URL}/index.php?route=account/account"
 
     def __init__(self, page: Page):
         self.page = page
@@ -11,7 +15,7 @@ class AccountPage:
         
 
     def goto(self):
-        self.page.goto(self.URL)
+        self.page.goto(self.url)
 
     def wait_for_page_load(self):
         """Wait for the account page to fully load"""

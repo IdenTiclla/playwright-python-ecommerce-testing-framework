@@ -14,16 +14,16 @@ class MainCarousel(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
         
-        # Main carousel container
-        self.carousel_container = page.locator("div#mz-carousel-217960")
+        # Main carousel container - try multiple selectors
+        self.carousel_container = page.locator("div[data-ride='carousel'], .carousel, #carousel, .slider-container, .main-slider").first
         
         # Slide elements
         self.slides = self.carousel_container.locator(".carousel-item")
         self.active_slide = self.carousel_container.locator(".carousel-item.active")
         
-        # Navigation controls
-        self.next_button = self.carousel_container.locator("a.carousel-control-next")
-        self.prev_button = self.carousel_container.locator("a.carousel-control-prev")
+        # Navigation controls - try multiple selectors
+        self.next_button = page.locator("a.carousel-control-next, .carousel-control-next, .next, .slider-next, [data-slide='next']").first
+        self.prev_button = page.locator("a.carousel-control-prev, .carousel-control-prev, .prev, .slider-prev, [data-slide='prev']").first
         
         # Slide indicators (dots)
         self.indicators_container = self.carousel_container.locator(".carousel-indicators")
@@ -39,7 +39,7 @@ class MainCarousel(BaseComponent):
     
     def is_visible(self) -> bool:
         """Check if the carousel is visible on the page."""
-        return self._is_element_visible_dom("div#mz-carousel-217960")
+        return self.carousel_container.is_visible()
     
     def wait_for_carousel_load(self, timeout: int = 10000) -> None:
         """Wait for the carousel to be fully loaded and visible."""
@@ -122,6 +122,12 @@ class MainCarousel(BaseComponent):
         """Navigate to the next slide using the next button."""
         current_index = self.get_active_slide_index()
         
+        # Hover over carousel to make navigation buttons visible
+        self.carousel_container.hover()
+        
+        # Wait a bit for the buttons to become visible
+        self.page.wait_for_timeout(200)
+        
         # Ensure button is ready for interaction
         self.next_button.wait_for(state="attached", timeout=5000)
         
@@ -149,6 +155,12 @@ class MainCarousel(BaseComponent):
         """Navigate to the previous slide using the previous button."""
         current_index = self.get_active_slide_index()
         slide_count = self.get_slide_count()
+        
+        # Hover over carousel to make navigation buttons visible
+        self.carousel_container.hover()
+        
+        # Wait a bit for the buttons to become visible
+        self.page.wait_for_timeout(200)
         
         # Ensure button is ready for interaction
         self.prev_button.wait_for(state="attached", timeout=5000)
@@ -182,7 +194,7 @@ class MainCarousel(BaseComponent):
         
         # Disable auto-play to prevent interference
         if self.is_auto_play_enabled():
-            self.page.evaluate("document.querySelector('div#mz-carousel-217960').setAttribute('data-interval', 'false')")
+            self.page.evaluate("document.querySelector('div[data-ride=\"carousel\"]').setAttribute('data-interval', 'false')")
         
         indicator = self.indicators.nth(indicator_index)
         
@@ -337,7 +349,7 @@ class MainCarousel(BaseComponent):
         try:
             # Try to disable auto-play by setting data-interval to false
             self.page.evaluate("""
-                const carousel = document.querySelector('div#mz-carousel-217960');
+                const carousel = document.querySelector('div[data-ride="carousel"]');
                 if (carousel) {
                     carousel.setAttribute('data-interval', 'false');
                     carousel.setAttribute('data-ride', 'false');
@@ -387,8 +399,8 @@ class MainCarousel(BaseComponent):
     
     def are_navigation_buttons_visible(self) -> bool:
         """Check if navigation buttons are visible using DOM-based visibility check."""
-        next_visible = self._is_element_visible_dom("div#mz-carousel-217960 a.carousel-control-next")
-        prev_visible = self._is_element_visible_dom("div#mz-carousel-217960 a.carousel-control-prev")
+        next_visible = self.next_button.is_visible()
+        prev_visible = self.prev_button.is_visible()
         return next_visible and prev_visible
 
     # Assertion Methods for Testing

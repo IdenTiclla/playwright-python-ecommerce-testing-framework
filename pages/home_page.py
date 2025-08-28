@@ -7,9 +7,9 @@ from components.notification import Notification
 from components.cart_panel import CartPanel
 from pages.base_page import BasePage
 from components.header_actions import HeaderActions
+from utils.config import BASE_URL
 
 class HomePage(BasePage):
-    URL = "https://ecommerce-playground.lambdatest.io/"
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -23,7 +23,7 @@ class HomePage(BasePage):
 
 
     def goto(self):
-        self.page.goto(self.URL)
+        self.page.goto(f"{BASE_URL}/")
 
     def search(self, term):
         self.search_bar.search(term)

@@ -4,8 +4,8 @@ from pages.base_page import BasePage
 class TopProducts(BasePage):
     def __init__(self, page: Page):
         self.page = page
-        self.section = self.page.locator("div#entry_217977 > div[class*='entry-section']")
-        self.product_items = self.page.locator("div#entry_217977 .product-thumb")
+        self.section = self.page.locator("//h3[contains(text(), 'Top Products')]/parent::div/parent::div")
+        self.product_items = self.page.locator("//h3[contains(text(), 'Top Products')]/parent::div/parent::div//div[contains(@class, 'product-thumb image-top')]")
         self.cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = "button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_items} button[class*='btn-compare']"

@@ -1,18 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "practicing-playwright-python"
 version = "0.1.0"
-description = "Add your description here"
+description = "Practicing Playwright with Python - E2E Testing Framework"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "playwright>=1.51.0",
     "pytest>=8.3.5",
+    "pytest-playwright>=0.7.0",
+    "pytest-xdist>=3.6.0",
     "python-dotenv>=1.1.0",
     "Faker>=18.4.0"
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pages*", "components*", "tests*", "utils*"]
+
 [tool.pytest.ini_options]
 markers = [
-    "cart: tests relacionados con el carrito de compras",
+    "cart: tests relacionados con el carrito de compras", 
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "parallel: tests que pueden ejecutarse en paralelo",
+    "serial: tests que deben ejecutarse secuencialmente",
+    "navbar_horizontal: tests del navbar horizontal",
+    "quick_view_modal: tests del modal de quick view"
+]
+# Configuración para ejecución paralela
+addopts = [
+    "--strict-markers",
+    "--tb=short", 
+    "--disable-warnings",
+    "-v"
+]
+# Timeouts para evitar pruebas colgadas
+timeout = 300
+# Filtros para reducir ruido en logs
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning"
 ]
