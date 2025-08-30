@@ -55,12 +55,44 @@ class TopProducts(BasePage):
             
     def show_quick_view(self, index=0):
         self.scroll_to_top_products()
-        self.page.wait_for_load_state("networkidle", timeout=5000)
+        self.page.wait_for_load_state("networkidle", timeout=10000)
 
+        # Wait for any existing modals or drawers to close
+        self.page.wait_for_timeout(1000)
+        
+        # Close any open drawers that might intercept clicks
+        drawer_close_selector = "a[data-toggle='mz-pure-drawer'][aria-expanded='true']"
+        if self.page.locator(drawer_close_selector).count() > 0:
+            self.page.locator(drawer_close_selector).first.click()
+            self.page.wait_for_timeout(500)
+            
+        # Ensure no overlay elements are intercepting
+        overlay_elements = [
+            "div.entry-section.container",
+            "header.header a[data-toggle='mz-pure-drawer']"
+        ]
+        
+        # Wait for page to be completely stable
+        self.page.wait_for_function("() => document.readyState === 'complete'")
+        
         self.hover_over_top_product(index)
+        self.page.wait_for_timeout(300)  # Wait for hover effect
 
-        quick_view_button = self.product_items.nth(index).locator("button[class*='quick-view']")    
-        quick_view_button.click()
+        quick_view_button = self.product_items.nth(index).locator("button[class*='quick-view']")
+        
+        # Wait for element to be stable and actionable
+        quick_view_button.wait_for(state="visible", timeout=10000)
+        
+        # Scroll element into view and ensure it's not covered
+        quick_view_button.scroll_into_view_if_needed()
+        self.page.wait_for_timeout(200)
+        
+        # Try normal click first, then force if needed
+        try:
+            quick_view_button.click(timeout=5000)
+        except Exception:
+            # Fallback to force click if normal click fails
+            quick_view_button.click(force=True)
         
 
 

@@ -14,7 +14,8 @@ dependencies = [
     "pytest-playwright>=0.7.0",
     "pytest-xdist>=3.6.0",
     "python-dotenv>=1.1.0",
-    "Faker>=18.4.0"
+    "Faker>=18.4.0",
+    "pytest-repeat>=0.9.4",
 ]
 
 [tool.setuptools.packages.find]

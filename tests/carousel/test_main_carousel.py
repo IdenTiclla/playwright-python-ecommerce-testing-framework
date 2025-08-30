@@ -312,3 +312,21 @@ class TestMainCarousel(BaseTest):
             except Exception:
                 # Some slides might not be clickable, which is fine
                 pass
+
+    def test_carousel_first_slide_url(self):
+        """Test the URL of the first slide."""
+        self.carousel.slides.first.click()
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=40"
+
+    def test_carousel_second_slide_url(self):
+        """Test the URL of the second slide."""
+        self.carousel.navigate_to_next_slide()
+        self.carousel.slides.nth(1).click()
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=28"
+
+    def test_carousel_third_slide_url(self):
+        """Test the URL of the third slide."""
+        self.carousel.navigate_to_next_slide()
+        self.carousel.navigate_to_next_slide()
+        self.carousel.slides.nth(2).click()
+        assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=30"
