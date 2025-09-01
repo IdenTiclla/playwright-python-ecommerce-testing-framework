@@ -18,8 +18,16 @@ class ProductPage(BasePage):
         self.ask_question_button = page.locator("div[class='entry-row row order-10 order-sm-8 order-md-7 '] a").nth(3)
 
 
+    def get_product_name(self):
+        """Get the product name"""
+        return self.product_name.text_content()
+
     def get_product_availability(self):
         return self.product_availability.text_content()
+    
+    def get_product_price(self):
+        """Get the product price"""
+        return self.product_price.text_content()
     
     def get_product_quantity(self):
         """Get the product quantity"""
