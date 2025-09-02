@@ -73,3 +73,32 @@ class TestProduct(BaseTest):
 
         # Assert that the final quantity is the initial quantity
         assert final_quantity == initial_quantity
+
+    def test_increase_and_decrease_quantity_on_product_page(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Get initial quantity of the product
+        initial_quantity = self.product_page.get_product_quantity()
+        
+        # Increase the product's quantity by 9
+        for i in range(9):
+            self.product_page.increase_product_quantity()
+
+        # Get final product's quantity
+        final_quantity = self.product_page.get_product_quantity()
+
+        # Assert that the final quantity is the initial quantity plus 9
+        assert final_quantity == initial_quantity + 9
+        
+        # Decrease the product's quantity by 9
+        for i in range(9):
+            self.product_page.decrease_product_quantity()
+
+        # Get final product's quantity
+        final_quantity = self.product_page.get_product_quantity()
+
+        # Assert that the final quantity is the initial quantity
+        assert final_quantity == initial_quantity
