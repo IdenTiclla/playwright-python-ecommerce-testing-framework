@@ -1,6 +1,5 @@
 from tests.base_test import BaseTest
-from playwright.sync_api import expect
-import time
+
 
 
 class TestProduct(BaseTest):
@@ -133,3 +132,33 @@ class TestProduct(BaseTest):
         # Get cart count
         cart_count = self.product_page.header_actions.get_cart_count()
         assert cart_count == "1", f"Cart count should be 1, got: {cart_count}"
+
+    def test_add_five_products_to_cart_from_product_page(self):
+        # Navigate to the home page and click on the third product in the carousel
+        self.home_page.goto()
+        self.home_page.top_products.scroll_to_top_products()
+        self.home_page.top_products.product_items.nth(3).click()
+        self.product_page.wait_for_page_load()
+
+        # Get cart count and assert it is 0
+        cart_count = self.product_page.header_actions.get_cart_count()
+        assert cart_count == "0", f"Cart count should be 0, got: {cart_count}"
+
+        # Add the product to the cart
+        self.product_page.add_product_to_cart(quantity=5)
+
+        # Verify notification message
+
+        product_name = self.product_page.get_product_name()
+
+        notification_message = self.product_page.notification.get_message_text()
+        
+        assert "Success:" in notification_message
+        assert product_name in notification_message
+
+        # Close notification
+        self.product_page.notification.close()
+
+        # Get cart count
+        cart_count = self.product_page.header_actions.get_cart_count()
+        assert cart_count == "5", f"Cart count should be 5, got: {cart_count}"
