@@ -36,3 +36,7 @@ class ProductPage(BasePage):
     def increase_product_quantity(self):
         """Increase the product quantity"""
         self.increase_quantity_button.click()
+
+    def decrease_product_quantity(self):
+        """Decrease the product quantity"""
+        self.decrease_quantity_button.click()
