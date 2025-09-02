@@ -1,5 +1,6 @@
 from tests.base_test import BaseTest
 from playwright.sync_api import expect
+import time
 
 
 class TestProduct(BaseTest):
@@ -35,3 +36,22 @@ class TestProduct(BaseTest):
         assert self.product_page.get_product_name() == "iMac"
         assert self.product_page.get_product_price() == "$170.00"
         assert self.product_page.get_product_availability() == "Out Of Stock"
+
+    def test_increase_quantity_on_product_page(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+        
+        # Get the initial quantity of the product
+        initial_quantity = self.product_page.get_product_quantity()
+
+        # Increase the quantity of the product by 9
+        for i in range(9):
+            self.product_page.increase_product_quantity()
+        
+        # Get the final quantity of the product
+        final_quantity = self.product_page.get_product_quantity()
+        
+        # Assert that the final quantity is the initial quantity plus 9
+        assert final_quantity == initial_quantity + 9

@@ -32,3 +32,7 @@ class ProductPage(BasePage):
     def get_product_quantity(self):
         """Get the product quantity"""
         return int(self.quantity_input.input_value())
+    
+    def increase_product_quantity(self):
+        """Increase the product quantity"""
+        self.increase_quantity_button.click()
