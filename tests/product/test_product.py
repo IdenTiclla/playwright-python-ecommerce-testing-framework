@@ -1,5 +1,5 @@
 from tests.base_test import BaseTest
-
+import time
 
 
 class TestProduct(BaseTest):
@@ -162,3 +162,18 @@ class TestProduct(BaseTest):
         # Get cart count
         cart_count = self.product_page.header_actions.get_cart_count()
         assert cart_count == "5", f"Cart count should be 5, got: {cart_count}"
+
+    def test_add_review_without_rating(self):
+        # Navigate to the home page and click on third product of top products
+        self.home_page.goto()
+        self.home_page.top_products.scroll_to_top_products()
+        self.home_page.top_products.product_items.nth(3).click()
+        self.product_page.wait_for_page_load()
+
+        # Add review without rating
+        self.product_page.review_form.submit_review(rating=0, name="John Doe", review="This is a review")
+        
+        # Verify error message
+        error_message = self.product_page.review_form.get_error_message()
+        expected_error_message = "Warning: Please select a review rating!"
+        assert error_message == expected_error_message
