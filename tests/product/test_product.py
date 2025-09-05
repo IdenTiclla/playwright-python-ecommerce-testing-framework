@@ -191,3 +191,17 @@ class TestProduct(BaseTest):
         # Verify error message
         error_message = self.product_page.review_form.get_error_message()
         assert error_message == "Warning: Review Text must be between 25 and 1000 characters!"
+
+    def test_add_review_with_empty_name(self):
+        # Navigate to the home page and click on third product of top products
+        self.home_page.goto()
+        self.home_page.top_products.scroll_to_top_products()
+        self.home_page.top_products.product_items.nth(3).click()
+        self.product_page.wait_for_page_load()
+
+        # Add empty review
+        self.product_page.review_form.submit_review(rating=1, name="", review="This is a review with a proper length")
+
+        # Verify error message
+        error_message = self.product_page.review_form.get_error_message()
+        assert error_message == "Warning: Review Name must be between 3 and 25 characters!"
