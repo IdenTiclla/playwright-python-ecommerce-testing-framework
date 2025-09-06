@@ -11,7 +11,7 @@ class ProductPage(BasePage):
         self.header_actions = HeaderActions(page)
         self.review_form = ReviewForm(page)
 
-        self.wishlist_button = page.locator("btn btn-wishlist wishlist-28").first
+        self.wishlist_button = page.locator("div#product-product div.content-image.d-none button")
         self.product_name = page.locator("div[class*='content-title'] h1")
         self.product_price = page.locator("div.price h3")
         self.product_availability = page.locator("span[class='badge badge-danger'], span[class='badge badge-success']")
@@ -59,3 +59,7 @@ class ProductPage(BasePage):
         """Add the product to the cart"""
         self.fill_product_quantity(quantity)
         self.add_to_cart_button.click()
+    
+    def add_product_to_wishlist(self):
+        """Add the product to the wishlist"""
+        self.wishlist_button.click()

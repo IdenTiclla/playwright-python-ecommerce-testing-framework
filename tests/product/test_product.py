@@ -205,3 +205,24 @@ class TestProduct(BaseTest):
         # Verify error message
         error_message = self.product_page.review_form.get_error_message()
         assert error_message == "Warning: Review Name must be between 3 and 25 characters!"
+
+    def test_add_product_to_wishlist_from_product_page_without_login(self):
+        # Navigate to the home page and click on third product of top products
+        self.home_page.goto()
+        self.home_page.top_products.scroll_to_top_products()
+        self.home_page.top_products.product_items.nth(3).click()
+        self.product_page.wait_for_page_load()
+
+        # Get product name
+        product_name = self.product_page.get_product_name()
+
+        # Add product to wishlist
+        self.product_page.add_product_to_wishlist()
+
+        # Verify notification message
+        notification_message = self.product_page.notification.get_message_text()
+        assert "login" in notification_message
+        assert "You must login or create an account to save iMac to your wish list!" in notification_message
+        
+        # Verify product name in notification message
+        assert product_name in notification_message
