@@ -1,5 +1,5 @@
 from tests.base_test import BaseTest
-import time
+from utils.data_generator import generate_random_first_name, generate_random_last_name, generate_random_email, generate_random_phone_number, generate_random_password
 
 
 class TestProduct(BaseTest):
@@ -226,3 +226,50 @@ class TestProduct(BaseTest):
         
         # Verify product name in notification message
         assert product_name in notification_message
+
+    def test_add_product_to_wishlist_from_product_page_with_logged_user(self):
+        # Create a new user
+        self.home_page.goto()
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+        password = generate_random_password()
+        self.register_page.register(
+            firstname=generate_random_first_name(),
+            lastname=generate_random_last_name(),
+            email=generate_random_email(),
+            telephone=generate_random_phone_number(),
+            password=password,
+            password_confirm=password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+        
+        # Navigate to product page
+        self.success_page.wait_for_page_load()
+        self.home_page.goto()
+        self.home_page.top_products.scroll_to_top_products()
+        self.home_page.top_products.product_items.nth(3).click()
+        self.product_page.wait_for_page_load()
+
+        # Get product name
+        product_name = self.product_page.get_product_name()
+
+        # Add product to wishlist
+        self.product_page.add_product_to_wishlist()
+
+        # Verify notification message
+        notification_message = self.product_page.notification.get_message_text()
+        assert f"Success: You have added {product_name} to your wish list!" == notification_message
+
+        # Verify product name in notification message
+        assert product_name in notification_message
+
+        # Close notification
+        self.product_page.notification.close()
+
+        # Verify product name in wishlist
+        self.wishlist_page.goto()
+        self.wishlist_page.wait_for_page_load()
+        assert product_name in self.wishlist_page.get_product_details(0)["product_name"]
+
+        # Verify product quantity in wishlist
+        assert self.wishlist_page.get_wishlist_items_count() == 1
