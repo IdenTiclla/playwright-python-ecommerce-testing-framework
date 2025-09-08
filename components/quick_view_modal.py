@@ -56,6 +56,11 @@ class QuickViewModal():
         """Check if the quick view modal is visible"""
         self.page.wait_for_load_state("networkidle", timeout=10000)
         return self.page.locator(self.container).is_visible()
+
+
+    def get_product_name(self):
+        """Get the product name from the quick view modal"""
+        return self.page.locator(self.title).text_content()
     
     
     def close(self):

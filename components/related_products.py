@@ -18,6 +18,10 @@ class RelatedProducts(BaseComponent):
         """Get the name of a related product"""
         return self.related_products.locator("h4 a").nth(index).text_content().strip()
 
+    def get_related_product_price(self, index=0):
+        """Get the price of a related product"""
+        return self.related_products.locator("div.price span").nth(index).text_content()
+
     def add_product_to_wishlist(self, index=0):
         """Add a product to wishlist"""
         # hover a product by index
