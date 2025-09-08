@@ -1,6 +1,5 @@
 from playwright.sync_api import Page
 from components.base_component import BaseComponent
-
 class RelatedProducts(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
@@ -31,3 +30,15 @@ class RelatedProducts(BaseComponent):
 
         # Click the button
         wishlist_button.click()
+
+    def open_quick_view(self, index=0):
+        """Open quick view modal for a product"""
+        self.related_products.nth(index).hover()
+        quick_view_button = self.related_products.locator(self.quick_view_buttons).nth(index)
+        
+        # Wait for the button to be visible
+        quick_view_button.wait_for(state="visible", timeout=10000)
+        self.page.wait_for_timeout(200)
+        
+        # Click the button
+        quick_view_button.click()

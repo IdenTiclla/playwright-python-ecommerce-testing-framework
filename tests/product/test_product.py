@@ -1,6 +1,7 @@
 from tests.base_test import BaseTest
 from utils.data_generator import generate_random_first_name, generate_random_last_name, generate_random_email, generate_random_phone_number, generate_random_password
 import time
+from playwright.sync_api import expect
 
 class TestProduct(BaseTest):
     def test_first_carousel_product_availability(self):
@@ -311,3 +312,26 @@ class TestProduct(BaseTest):
         assert "login" in notification_message
         assert product_name in notification_message
         assert f"You must login or create an account to save {product_name} to your wish list!" in notification_message
+
+    def test_open_and_close_quick_view_from_related_products(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Open quick view from related products
+        self.product_page.related_products.open_quick_view(index=0)
+
+        # self.page.wait_for_load_state("networkidle", timeout=10000)
+
+        # Verify quick view modal is open
+        expect(self.page.locator(self.product_page.quick_view_modal.container)).to_be_visible(timeout=10000)
+
+        # Close quick view modal
+        self.product_page.quick_view_modal.close()
+
+        # self.page.wait_for_load_state("networkidle", timeout=10000)
+
+        # Verify quick view modal is closed
+        # assert not self.product_page.quick_view_modal.is_visible()
+        expect(self.page.locator(self.product_page.quick_view_modal.container)).to_be_hidden(timeout=10000)
