@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from components.notification import Notification
 from components.header_actions import HeaderActions
 from components.review_form import ReviewForm
+from components.related_products import RelatedProducts
 
 class ProductPage(BasePage):
     def __init__(self, page):
@@ -10,6 +11,7 @@ class ProductPage(BasePage):
         self.notification = Notification(page)
         self.header_actions = HeaderActions(page)
         self.review_form = ReviewForm(page)
+        self.related_products = RelatedProducts(page)
 
         self.wishlist_button = page.locator("div#product-product div.content-image.d-none button")
         self.product_name = page.locator("div[class*='content-title'] h1")
