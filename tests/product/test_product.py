@@ -283,3 +283,13 @@ class TestProduct(BaseTest):
         # Verify related products
         assert self.product_page.related_products.get_related_products_count() > 0
         assert self.product_page.related_products.get_related_products_count() == 8
+
+    def test_second_image_on_carousel_does_not_have_related_products(self):
+        # Navigate to the home page and click on the third product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.navigate_to_next_slide()
+        self.home_page.carousel.slides.nth(1).click()
+        self.product_page.wait_for_page_load()
+
+        # Verify related products
+        assert self.product_page.related_products.get_related_products_count() == 0
