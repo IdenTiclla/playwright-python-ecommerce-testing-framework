@@ -273,3 +273,13 @@ class TestProduct(BaseTest):
 
         # Verify product quantity in wishlist
         assert self.wishlist_page.get_wishlist_items_count() == 1
+
+    def test_first_image_on_carousel_has_related_products(self):
+        # Navigate to the home page and click on the third product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Verify related products
+        assert self.product_page.related_products.get_related_products_count() > 0
+        assert self.product_page.related_products.get_related_products_count() == 8
