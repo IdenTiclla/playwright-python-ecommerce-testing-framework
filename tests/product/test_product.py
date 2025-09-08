@@ -1,6 +1,7 @@
 from tests.base_test import BaseTest
 from utils.data_generator import generate_random_first_name, generate_random_last_name, generate_random_email, generate_random_phone_number, generate_random_password
 import time
+from playwright.sync_api import expect
 
 class TestProduct(BaseTest):
     def test_first_carousel_product_availability(self):
@@ -305,6 +306,64 @@ class TestProduct(BaseTest):
         
         # Add product to wishlist
         self.product_page.related_products.add_product_to_wishlist(index=0)
+
+        # Verify notification message
+        notification_message = self.product_page.notification.get_message_text()
+        assert "login" in notification_message
+        assert product_name in notification_message
+        assert f"You must login or create an account to save {product_name} to your wish list!" in notification_message
+
+    def test_open_and_close_quick_view_from_related_products(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Open quick view from related products
+        self.product_page.related_products.open_quick_view(index=0)
+
+        # self.page.wait_for_load_state("networkidle", timeout=10000)
+
+        # Verify quick view modal is open
+        expect(self.page.locator(self.product_page.quick_view_modal.container)).to_be_visible(timeout=10000)
+
+        # Close quick view modal
+        self.product_page.quick_view_modal.close()
+
+        # self.page.wait_for_load_state("networkidle", timeout=10000)
+
+        # Verify quick view modal is closed
+        # assert not self.product_page.quick_view_modal.is_visible()
+        expect(self.page.locator(self.product_page.quick_view_modal.container)).to_be_hidden(timeout=10000)
+
+    def test_add_product_to_wishlist_from_quick_view_of_related_products_without_logged_user(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Get product name
+        product_name = self.product_page.related_products.get_related_product_name(index=0)
+
+        # Get product price
+        product_price_from_related_product = self.product_page.related_products.get_related_product_price(index=0)
+
+        # Open quick view from related products
+        self.product_page.related_products.open_quick_view(index=0)
+
+        # Add product to wishlist from quick view modal
+        self.product_page.quick_view_modal.add_to_wishlist()
+
+        # Verify product name from quick view modal
+        product_name_from_quick_view = self.product_page.quick_view_modal.get_product_name()
+        assert product_name_from_quick_view == product_name
+
+        # Verify product price from quick view modal
+        product_price_from_quick_view = self.product_page.quick_view_modal.get_price()
+        assert product_price_from_quick_view == product_price_from_related_product
+
+        # Verify quick view modal is closed
+        expect(self.page.locator(self.product_page.quick_view_modal.container)).to_be_hidden(timeout=10000)
 
         # Verify notification message
         notification_message = self.product_page.notification.get_message_text()

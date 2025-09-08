@@ -1,6 +1,5 @@
 from playwright.sync_api import Page
 from components.base_component import BaseComponent
-
 class RelatedProducts(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
@@ -19,6 +18,10 @@ class RelatedProducts(BaseComponent):
         """Get the name of a related product"""
         return self.related_products.locator("h4 a").nth(index).text_content().strip()
 
+    def get_related_product_price(self, index=0):
+        """Get the price of a related product"""
+        return self.related_products.locator("div.price span").nth(index).text_content()
+
     def add_product_to_wishlist(self, index=0):
         """Add a product to wishlist"""
         # hover a product by index
@@ -31,3 +34,15 @@ class RelatedProducts(BaseComponent):
 
         # Click the button
         wishlist_button.click()
+
+    def open_quick_view(self, index=0):
+        """Open quick view modal for a product"""
+        self.related_products.nth(index).hover()
+        quick_view_button = self.related_products.locator(self.quick_view_buttons).nth(index)
+        
+        # Wait for the button to be visible
+        quick_view_button.wait_for(state="visible", timeout=10000)
+        self.page.wait_for_timeout(200)
+        
+        # Click the button
+        quick_view_button.click()
