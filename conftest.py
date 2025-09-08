@@ -29,7 +29,9 @@ def browser_type_launch_args():
             "--disable-extensions", 
             "--disable-gpu",
             "--no-sandbox",
-            "--disable-setuid-sandbox"
+            "--disable-setuid-sandbox",
+            "--memory-pressure-off",  # Nuevo
+            "--max_old_space_size=4096"  # Nuevo
         ] if is_parallel else []
     }
 

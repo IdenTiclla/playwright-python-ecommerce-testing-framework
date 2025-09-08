@@ -1,6 +1,6 @@
 from tests.base_test import BaseTest
 from utils.data_generator import generate_random_first_name, generate_random_last_name, generate_random_email, generate_random_phone_number, generate_random_password
-
+import time
 
 class TestProduct(BaseTest):
     def test_first_carousel_product_availability(self):
@@ -293,3 +293,21 @@ class TestProduct(BaseTest):
 
         # Verify related products
         assert self.product_page.related_products.get_related_products_count() == 0
+
+    def test_add_product_to_wishlist_from_related_products(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Get product name
+        product_name = self.product_page.related_products.get_related_product_name(index=0)
+        
+        # Add product to wishlist
+        self.product_page.related_products.add_product_to_wishlist(index=0)
+
+        # Verify notification message
+        notification_message = self.product_page.notification.get_message_text()
+        assert "login" in notification_message
+        assert product_name in notification_message
+        assert f"You must login or create an account to save {product_name} to your wish list!" in notification_message

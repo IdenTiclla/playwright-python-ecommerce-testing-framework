@@ -7,8 +7,8 @@ load_dotenv()
 BASE_URL = os.getenv("BASE_URL", "https://default-url.com")
 
 # --- Timeouts (en milisegundos) ---
-DEFAULT_TIMEOUT = 15000
-DEFAULT_NAVIGATION_TIMEOUT = 15000
+DEFAULT_TIMEOUT = 30000
+DEFAULT_NAVIGATION_TIMEOUT = 30000
 
 # --- Configuración del Navegador ---
 IS_HEADLESS = os.getenv("HEADLESS", "True").lower() in ('true', '1', 't')
