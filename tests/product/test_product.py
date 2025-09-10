@@ -403,3 +403,39 @@ class TestProduct(BaseTest):
         inactive_tabs = self.product_page.get_inactive_tabs()
         assert "Reviews" in inactive_tabs
         assert "Custom" in inactive_tabs
+
+    def test_inactive_tabs_and_switch_to_different_tabs_on_product_page(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Switch to different tabs
+        self.product_page.switch_to_tab(tab_name="Reviews")
+        assert self.product_page.get_active_tab() == "Reviews"
+
+        # Verify inactive tabs
+        inactive_tabs = self.product_page.get_inactive_tabs()
+        assert "Description" in inactive_tabs
+        assert "Reviews" not in inactive_tabs
+        assert "Custom" in inactive_tabs
+
+        # Switch to different tabs
+        self.product_page.switch_to_tab(tab_name="Custom")
+        assert self.product_page.get_active_tab() == "Custom"
+
+        # Verify inactive tabs
+        inactive_tabs = self.product_page.get_inactive_tabs()
+        assert "Description" in inactive_tabs
+        assert "Reviews" in inactive_tabs
+        assert "Custom" not in inactive_tabs
+
+        # Switch to different tabs
+        self.product_page.switch_to_tab(tab_name="Description")
+        assert self.product_page.get_active_tab() == "Description"
+
+        # Verify inactive tabs
+        inactive_tabs = self.product_page.get_inactive_tabs()
+        assert "Description" not in inactive_tabs
+        assert "Reviews" in inactive_tabs
+        assert "Custom" in inactive_tabs
