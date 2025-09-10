@@ -388,3 +388,18 @@ class TestProduct(BaseTest):
         assert "Success:" in notification_message
         assert product_name in notification_message
         assert f"You have added {product_name} to your product comparison!" in notification_message
+
+    def test_default_active_tab_on_product_page(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Verify default active tab
+        active_tab = self.product_page.get_active_tab()
+        assert active_tab == "Description"
+
+        # Verify inactive tabs
+        inactive_tabs = self.product_page.get_inactive_tabs()
+        assert "Reviews" in inactive_tabs
+        assert "Custom" in inactive_tabs
