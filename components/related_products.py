@@ -46,3 +46,15 @@ class RelatedProducts(BaseComponent):
         
         # Click the button
         quick_view_button.click()
+    
+    def compare_product(self, index=0):
+        """Compare a product"""
+        self.related_products.nth(index).hover()
+        compare_button = self.related_products.locator(self.compare_buttons).nth(index)
+        
+        # Wait for the button to be visible
+        compare_button.wait_for(state="visible", timeout=10000)
+        self.page.wait_for_timeout(200)
+        
+        # Click the button
+        compare_button.click()
