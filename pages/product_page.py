@@ -29,6 +29,8 @@ class ProductPage(BasePage):
         self.popup_button = page.locator("div[class='entry-row row order-10 order-sm-8 order-md-7 '] a").nth(2)
         self.ask_question_button = page.locator("div[class='entry-row row order-10 order-sm-8 order-md-7 '] a").nth(3)
 
+        self.tab_list = page.locator("div.d-none.d-md-block ul[role='tablist'] li")
+
 
     def get_product_name(self):
         """Get the product name"""
@@ -66,3 +68,12 @@ class ProductPage(BasePage):
     def add_product_to_wishlist(self):
         """Add the product to the wishlist"""
         self.wishlist_button.click()
+
+    def get_active_tab(self):
+        """Get the active tab"""
+        return self.tab_list.locator("a.active").text_content().strip()
+
+    def get_inactive_tabs(self):
+        """Get the inactive tabs"""
+        # apply strip method to each item on the list
+        return [item.strip() for item in self.tab_list.locator("a:not(.active)").all_text_contents()]
