@@ -77,3 +77,7 @@ class ProductPage(BasePage):
         """Get the inactive tabs"""
         # apply strip method to each item on the list
         return [item.strip() for item in self.tab_list.locator("a:not(.active)").all_text_contents()]
+
+    def switch_to_tab(self, tab_name: str):
+        """Switch to a specific tab"""
+        self.tab_list.locator(f"a:has-text('{tab_name}')").click()
