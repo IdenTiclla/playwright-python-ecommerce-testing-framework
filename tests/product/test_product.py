@@ -370,3 +370,21 @@ class TestProduct(BaseTest):
         assert "login" in notification_message
         assert product_name in notification_message
         assert f"You must login or create an account to save {product_name} to your wish list!" in notification_message
+
+    def test_compare_product_from_related_products(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Get product name
+        product_name = self.product_page.related_products.get_related_product_name(index=0)
+
+        # Compare product from related products
+        self.product_page.related_products.compare_product(index=0)
+
+        # Verify notification message
+        notification_message = self.product_page.notification.get_message_text()
+        assert "Success:" in notification_message
+        assert product_name in notification_message
+        assert f"You have added {product_name} to your product comparison!" in notification_message
