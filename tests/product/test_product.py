@@ -389,7 +389,7 @@ class TestProduct(BaseTest):
         assert product_name in notification_message
         assert f"You have added {product_name} to your product comparison!" in notification_message
 
-    def test_default_active_tab_on_product_page(self):
+    def test_default_active_tab_and_tab_content_on_product_page(self):
         # Navigate to the home page and click on the first product in the carousel
         self.home_page.goto()
         self.home_page.carousel.slides.nth(0).click()
@@ -404,11 +404,22 @@ class TestProduct(BaseTest):
         assert "Reviews" in inactive_tabs
         assert "Custom" in inactive_tabs
 
+        # Verify tab content
+        tab_content = self.product_page.get_tab_content(tab_name="Description")
+
+        assert "iPhone is a revolutionary new mobile phone that allows you to make a call by simply tapping a name or number in your address book, a favorites list, or a call log. It also automatically syncs all your contacts from a PC, Mac, or Internet service. And it lets you select and listen to voicemail messages in whatever order you want just like email." == tab_content
+
+        # Verify tab content is visible
+        assert self.product_page.is_tab_content_visible(tab_name="Description")
+
     def test_inactive_tabs_and_switch_to_different_tabs_on_product_page(self):
         # Navigate to the home page and click on the first product in the carousel
         self.home_page.goto()
         self.home_page.carousel.slides.nth(0).click()
         self.product_page.wait_for_page_load()
+
+        # Verify tab content is visible
+        assert self.product_page.is_tab_content_visible(tab_name="Description")
 
         # Switch to different tabs
         self.product_page.switch_to_tab(tab_name="Reviews")
@@ -420,6 +431,13 @@ class TestProduct(BaseTest):
         assert "Reviews" not in inactive_tabs
         assert "Custom" in inactive_tabs
 
+        # Verify tab content
+        tab_content = self.product_page.get_tab_content(tab_name="Reviews")
+        assert "There are no reviews for this product." in tab_content
+
+        # Verify tab content is visible
+        assert self.product_page.is_tab_content_visible(tab_name="Reviews")
+
         # Switch to different tabs
         self.product_page.switch_to_tab(tab_name="Custom")
         assert self.product_page.get_active_tab() == "Custom"
@@ -430,6 +448,13 @@ class TestProduct(BaseTest):
         assert "Reviews" in inactive_tabs
         assert "Custom" not in inactive_tabs
 
+        # Verify tab content
+        tab_content = self.product_page.get_tab_content(tab_name="Custom")
+        assert "Create unlimited custom tabs and add any product detail, module, widget, design or HTML. Also possible to create custom tab layout using layout builder" in tab_content
+
+        # Verify tab content is visible
+        assert self.product_page.is_tab_content_visible(tab_name="Custom")
+
         # Switch to different tabs
         self.product_page.switch_to_tab(tab_name="Description")
         assert self.product_page.get_active_tab() == "Description"
@@ -439,3 +464,10 @@ class TestProduct(BaseTest):
         assert "Description" not in inactive_tabs
         assert "Reviews" in inactive_tabs
         assert "Custom" in inactive_tabs
+
+        # Verify tab content
+        tab_content = self.product_page.get_tab_content(tab_name="Description")
+        assert "iPhone is a revolutionary new mobile phone that allows you to make a call by simply tapping a name or number in your address book, a favorites list, or a call log. It also automatically syncs all your contacts from a PC, Mac, or Internet service. And it lets you select and listen to voicemail messages in whatever order you want just like email." in tab_content
+
+        # Verify tab content is visible
+        assert self.product_page.is_tab_content_visible(tab_name="Description")
