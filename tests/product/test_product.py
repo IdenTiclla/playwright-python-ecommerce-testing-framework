@@ -471,3 +471,24 @@ class TestProduct(BaseTest):
 
         # Verify tab content is visible
         assert self.product_page.is_tab_content_visible(tab_name="Description")
+
+    def test_ask_question_contact_form_open_close(self):
+        # Navigate to the home page and click on the first product in the carousel
+        self.home_page.goto()
+        self.home_page.carousel.slides.nth(0).click()
+        self.product_page.wait_for_page_load()
+
+        # Open contact form
+        self.product_page.click_on_ask_question_button()
+
+        # Verify contact form is open
+        # assert self.product_page.contact_form.is_contact_form_visible()
+        expect(self.product_page.contact_form.container).to_be_visible(timeout=10000)
+
+
+        # Close contact form
+        self.product_page.contact_form.close()
+
+        # Verify contact form is closed
+        # assert not self.product_page.contact_form.is_contact_form_visible()
+        expect(self.product_page.contact_form.container).to_be_hidden(timeout=10000)
