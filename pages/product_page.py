@@ -30,6 +30,7 @@ class ProductPage(BasePage):
         self.ask_question_button = page.locator("div[class='entry-row row order-10 order-sm-8 order-md-7 '] a").nth(3)
 
         self.tab_list = page.locator("div.d-none.d-md-block ul[role='tablist'] li")
+        self.tab_content = page.locator("div.d-none.d-md-block div.tab-content")
 
 
     def get_product_name(self):
@@ -81,3 +82,26 @@ class ProductPage(BasePage):
     def switch_to_tab(self, tab_name: str):
         """Switch to a specific tab"""
         self.tab_list.locator(f"a:has-text('{tab_name}')").click()
+        self.page.wait_for_timeout(200)
+
+    def get_tab_content(self, tab_name: str):
+        """Get the tab content"""
+        if tab_name == "Description":
+            return self.tab_content.locator("p.intro").text_content().strip()
+        elif tab_name == "Reviews":
+            return self.tab_content.locator("div.review").text_content().strip()
+        elif tab_name == "Custom":
+            return self.tab_content.locator("div.alert").text_content().strip()
+        else:
+            raise ValueError(f"Invalid tab name: {tab_name}. Use 'Description', 'Reviews', or 'Custom'")
+
+    def is_tab_content_visible(self, tab_name: str):
+        """Check if the tab content is visible"""
+        if tab_name == "Description":
+            return self.tab_content.locator("p.intro").is_visible()
+        elif tab_name == "Reviews":
+            return self.tab_content.locator("div.review").is_visible()
+        elif tab_name == "Custom":
+            return self.tab_content.locator("div.alert").is_visible()
+        else:
+            raise ValueError(f"Invalid tab name: {tab_name}. Use 'Description', 'Reviews', or 'Custom'")
