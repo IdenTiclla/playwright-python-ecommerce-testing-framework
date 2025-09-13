@@ -5,6 +5,7 @@ from components.top_collection import TopCollection
 from components.quick_view_modal import QuickViewModal
 from components.notification import Notification
 from components.cart_panel import CartPanel
+from components.articles import Articles
 from pages.base_page import BasePage
 from components.header_actions import HeaderActions
 from utils.config import BASE_URL
@@ -20,6 +21,7 @@ class HomePage(BasePage):
         self.notification = Notification(page)
         self.cart_panel = CartPanel(page)
         self.header_actions = HeaderActions(page)
+        self.articles = Articles(page)
 
 
     def goto(self):
