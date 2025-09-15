@@ -19,3 +19,23 @@ class TestArticles(BaseTest):
         self.page.wait_for_load_state("domcontentloaded", timeout=5000)
 
         assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/blog/article&article_id=37"
+
+    def test_article_title_and_author(self):
+        # Navigate to the home page
+        self.home_page.goto()
+        # Scroll to the articles
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # wait for the page to load
+        self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+
+        # Get the title and author of the article
+        title = self.article_page.get_page_title()
+        author = self.article_page.get_author()
+
+        assert title == "amet volutpat consequat mauris nunc congue nisi vitae suscipit tellus"
+        assert author == "Mark Jecno"
