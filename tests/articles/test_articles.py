@@ -78,3 +78,25 @@ class TestArticles(BaseTest):
         # Check comment has invalid class
         comment_class_name = self.article_page.comment_form.get_comment_input_class()
         assert "is-invalid" in comment_class_name
+
+    def test_submitted_comment_pending_approval(self):
+        # Navigate to the home page
+        self.home_page.goto()
+        # Scroll to the articles
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # Fill the comment form and submit it
+        self.article_page.comment_form.submit_comment(
+            name="John Doe",
+            email="john.doe@example.com",
+            comment="This is a valid test comment"
+        )
+
+        # Verify alert message
+        alert_messages = self.article_page.comment_form.alert.get_alert_messages()
+        alert_message = alert_messages[0]
+        assert "Thank you for your comment. It has been submitted to the webmaster for approval." in alert_message

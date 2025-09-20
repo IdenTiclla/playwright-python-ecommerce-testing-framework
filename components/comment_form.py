@@ -1,7 +1,9 @@
 from playwright.sync_api import Page
 from components.base_component import BaseComponent
+from components.alert import Alert
 
 class CommentForm(BaseComponent):
+
     def __init__(self, page: Page):
         super().__init__(page)
         self.page = page
@@ -10,10 +12,13 @@ class CommentForm(BaseComponent):
         self.comment_input = page.locator("textarea#input-comment")
         self.post_comment_button = page.locator("button#button-comment")
 
+        # Alert
+        self.alert = Alert(page)
+
     def post_comment(self):
         self.post_comment_button.click()
 
-    def fill_comment(self, name: str, email: str, comment: str):
+    def submit_comment(self, name: str, email: str, comment: str):
         self.your_name_input.clear()
         self.your_name_input.fill(name)
         self.email_input.clear()

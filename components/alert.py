@@ -9,4 +9,6 @@ class Alert:
         return self.alert.is_visible()
 
     def get_alert_messages(self):
+        # wait for the alert to be visible
+        self.alert.wait_for(state="visible")
         return self.alert.all_text_contents()
