@@ -1,11 +1,14 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
-
+from components.comment_form import CommentForm
 
 class ArticlePage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
+
+        # Components
+        self.comment_form = CommentForm(page)
 
         # Locators
         self.page_title = self.page.locator("h1.h1")
