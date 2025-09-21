@@ -13,8 +13,9 @@ class ArticlePage(BasePage):
         # Locators
         self.page_title = self.page.locator("h1.h1")
         self.author = self.page.locator("a.author")
-        self.views = self.page.locator("span.extra-viewed")
-        self.comments = self.page.locator("span.extra-comments")
+        self.views_amount = self.page.locator("span.extra-viewed")
+        self.comments_amount = self.page.locator("span.extra-comments")
+        self.comments = self.page.locator("div#comment ul li")
 
     def get_page_title(self):
         return self.page_title.text_content().strip()
@@ -26,6 +27,9 @@ class ArticlePage(BasePage):
         """Get the amount of views"""
         return self.views.text_content().strip()
     
-    def get_comments_amount(self):
+    def get_total_amount_of_comments(self):
         """Get the amount of comments"""
         return self.comments.text_content().strip().replace("comments", "")
+
+    def get_amount_of_visible_comments(self):
+        return self.comments.count()

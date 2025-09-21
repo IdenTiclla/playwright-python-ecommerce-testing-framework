@@ -82,12 +82,16 @@ class TestArticles(BaseTest):
     def test_submitted_comment_pending_approval(self):
         # Navigate to the home page
         self.home_page.goto()
+
         # Scroll to the articles
         self.home_page.articles.scroll_to_articles()
 
         # Click on the first article
         first_article = self.home_page.articles.article_items.nth(0)
         first_article.click()
+
+        # wait for the page to load
+        self.page.wait_for_load_state("domcontentloaded", timeout=5000)
 
         # Fill the comment form and submit it
         self.article_page.comment_form.submit_comment(
@@ -100,3 +104,22 @@ class TestArticles(BaseTest):
         alert_messages = self.article_page.comment_form.alert.get_alert_messages()
         alert_message = alert_messages[0]
         assert "Thank you for your comment. It has been submitted to the webmaster for approval." in alert_message
+
+    def test_default_amount_of_visible_comments(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # Scroll to the articles
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # wait for the page to load
+        # self.article_page.wait_for_page_load(state="domcontentloaded")
+        self.article_page.wait_for_page_load(state="networkidle")
+
+
+        # Check that the amount of visible comments is 5
+        assert self.article_page.get_amount_of_visible_comments() == 5
