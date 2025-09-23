@@ -16,6 +16,7 @@ class ArticlePage(BasePage):
         self.views_amount = self.page.locator("span.extra-viewed")
         self.comments_amount = self.page.locator("span.extra-comments")
         self.comments = self.page.locator("div#comment ul li")
+        self.view_comments_button = self.page.locator("ul a.view-replies")
 
     def get_page_title(self):
         return self.page_title.text_content().strip()
@@ -33,3 +34,6 @@ class ArticlePage(BasePage):
 
     def get_amount_of_visible_comments(self):
         return self.comments.count()
+
+    def click_on_view_comments_button(self):
+        self.view_comments_button.click()
