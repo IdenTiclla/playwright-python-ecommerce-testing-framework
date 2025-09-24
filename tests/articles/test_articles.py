@@ -144,3 +144,36 @@ class TestArticles(BaseTest):
 
         # Check that the amount of visible comments is 10
         expect(self.article_page.comments).to_have_count(10, timeout=10000)
+
+    def test_view_comments_button_multiple_times(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # Check that the amount of visible comments is 5
+        # Playwright automatically waits, but we need a longer timeout for high concurrency
+        expect(self.article_page.comments).to_have_count(5, timeout=30000)
+
+        # Click on the view comments button
+        self.article_page.click_on_view_comments_button()
+
+        # Check that the amount of visible comments is 10
+        expect(self.article_page.comments).to_have_count(10)
+
+        # Click on the view comments button
+        self.article_page.click_on_view_comments_button()
+
+        # Check that the amount of visible comments is 15
+        expect(self.article_page.comments).to_have_count(15)
+
+        # Click on the view comments button
+        self.article_page.click_on_view_comments_button()
+
+        # Check that the amount of visible comments is 20
+        expect(self.article_page.comments).to_have_count(20)
