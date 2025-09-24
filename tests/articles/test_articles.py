@@ -177,3 +177,17 @@ class TestArticles(BaseTest):
 
         # Check that the amount of visible comments is 20
         expect(self.article_page.comments).to_have_count(20)
+
+    def test_the_amount_of_related_products(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # Scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # Check that the amount of related products is 8
+        expect(self.article_page.related_products.related_products).to_have_count(8, timeout=10000)
