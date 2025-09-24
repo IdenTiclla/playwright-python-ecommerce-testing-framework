@@ -4,7 +4,7 @@ class RelatedProducts(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
         self.page = page
-        self.related_products = page.locator("div[class*='content-related'] div.product-thumb")
+        self.related_products = page.locator("div[class*='content-related'] div.product-thumb, div.product-thumb.image-top")
         self.add_to_cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = "button[class*='btn-wishlist']"
         self.compare_buttons = "button[class*='btn-compare']"
