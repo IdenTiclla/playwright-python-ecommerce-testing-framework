@@ -2,6 +2,7 @@ from playwright.sync_api import Page
 from pages.base_page import BasePage
 from components.comment_form import CommentForm
 from components.related_products import RelatedProducts
+from components.notification import Notification
 
 class ArticlePage(BasePage):
 
@@ -11,6 +12,7 @@ class ArticlePage(BasePage):
         # Components
         self.comment_form = CommentForm(page)
         self.related_products = RelatedProducts(page)
+        self.notification = Notification(page)
 
         # Locators
         self.page_title = self.page.locator("h1.h1")

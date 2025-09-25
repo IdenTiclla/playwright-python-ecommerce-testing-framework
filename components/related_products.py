@@ -16,7 +16,11 @@ class RelatedProducts(BaseComponent):
 
     def get_related_product_name(self, index=0):
         """Get the name of a related product"""
-        return self.related_products.locator("h4 a").nth(index).text_content().strip()
+        # Wait for related products to be loaded and visible
+        self.related_products.nth(index).wait_for(state="visible", timeout=30000)
+        product_name = self.related_products.locator("h4 a").nth(index)
+        product_name.wait_for(state="visible", timeout=10000)
+        return product_name.text_content().strip()
 
     def get_related_product_price(self, index=0):
         """Get the price of a related product"""
@@ -30,7 +34,7 @@ class RelatedProducts(BaseComponent):
         
         # Wait for the button to be visible
         wishlist_button.wait_for(state="visible", timeout=10000)
-        self.page.wait_for_timeout(200)
+        self.page.wait_for_timeout(500)
 
         # Click the button
         wishlist_button.click()
