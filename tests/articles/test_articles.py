@@ -224,3 +224,32 @@ class TestArticles(BaseTest):
         assert product_name in notification_message
         assert f"You must login or create an account to save {product_name} to your wish list!" in notification_message
         
+    def test_add_product_to_cart_from_related_products_on_article_page(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # Scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+        
+        # Wait for page to load completely
+        self.page.wait_for_load_state("networkidle", timeout=30000)
+        
+        # Wait for related products section to be visible
+        expect(self.article_page.related_products.related_products).to_have_count(8, timeout=30000)
+        
+        # Get product name
+        product_name = self.article_page.related_products.get_related_product_name(index=0)
+
+        # Add product to cart from related products
+        self.article_page.related_products.add_product_to_cart(index=0)
+        
+        # Verify notification message
+        notification_message = self.article_page.notification.get_message_text()
+        assert "Success:" in notification_message
+        assert product_name in notification_message
+        assert f"You have added {product_name} to your shopping cart!" in notification_message
+        
