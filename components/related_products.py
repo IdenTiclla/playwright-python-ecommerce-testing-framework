@@ -26,6 +26,19 @@ class RelatedProducts(BaseComponent):
         """Get the price of a related product"""
         return self.related_products.locator("div.price span").nth(index).text_content()
 
+    def add_product_to_cart(self, index=0):
+        """Add a product to cart"""
+        # hover a product by index
+        self.related_products.nth(index).hover()
+        cart_button = self.related_products.locator(self.add_to_cart_buttons).nth(index)
+        
+        # Wait for the button to be visible
+        cart_button.wait_for(state="visible", timeout=10000)
+        self.page.wait_for_timeout(500)
+
+        # Click the button
+        cart_button.click()
+
     def add_product_to_wishlist(self, index=0):
         """Add a product to wishlist"""
         # hover a product by index
