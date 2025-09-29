@@ -3,6 +3,7 @@ from pages.base_page import BasePage
 from components.comment_form import CommentForm
 from components.related_products import RelatedProducts
 from components.notification import Notification
+from components.quick_view_modal import QuickViewModal
 
 class ArticlePage(BasePage):
 
@@ -13,6 +14,7 @@ class ArticlePage(BasePage):
         self.comment_form = CommentForm(page)
         self.related_products = RelatedProducts(page)
         self.notification = Notification(page)
+        self.quick_view_modal = QuickViewModal(page)
 
         # Locators
         self.page_title = self.page.locator("h1.h1")

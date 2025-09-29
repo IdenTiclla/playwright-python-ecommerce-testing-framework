@@ -252,4 +252,40 @@ class TestArticles(BaseTest):
         assert "Success:" in notification_message
         assert product_name in notification_message
         assert f"You have added {product_name} to your shopping cart!" in notification_message
+
+    def test_quick_view_product_from_related_products_on_article_page(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # Scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+        
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # Wait for page to load completely
+        self.page.wait_for_load_state("networkidle", timeout=30000)
+        
+        # Wait for related products section to be visible
+        expect(self.article_page.related_products.related_products).to_have_count(8, timeout=30000)
+
+        # Get product name
+        product_name = self.article_page.related_products.get_related_product_name(index=0)
+
+        # Open quick view from related products
+        self.article_page.related_products.open_quick_view(index=0)
+
+        # Verify quick view modal is open
+        expect(self.page.locator(self.article_page.quick_view_modal.container)).to_be_visible(timeout=10000)
+
+        # Verify product name from quick view modal
+        product_name_from_quick_view = self.article_page.quick_view_modal.get_product_name()
+        assert product_name_from_quick_view == product_name
+
+        # Close quick view modal
+        self.article_page.quick_view_modal.close()
+
+        # Verify quick view modal is closed
+        expect(self.page.locator(self.article_page.quick_view_modal.container)).to_be_hidden(timeout=10000)
         
