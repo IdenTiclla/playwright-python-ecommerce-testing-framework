@@ -61,6 +61,9 @@ class QuickViewModal():
     def get_product_name(self):
         """Get the product name from the quick view modal"""
         return self.page.locator(self.title).text_content()
+
+    def click_on_compare_button(self):
+        self.page.locator(self.compare_button).click()
     
     
     def close(self):
