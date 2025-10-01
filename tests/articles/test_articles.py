@@ -289,3 +289,35 @@ class TestArticles(BaseTest):
         # Verify quick view modal is closed
         expect(self.page.locator(self.article_page.quick_view_modal.container)).to_be_hidden(timeout=10000)
         
+
+    def test_compare_product_from_quick_view_on_article_page(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # Scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+
+        # Click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # wait for the page to load
+        self.page.wait_for_load_state("networkidle", timeout=30000)
+
+        # Get product name
+        product_name = self.article_page.related_products.get_related_product_name(index=0)
+
+        # Open quick view from related products
+        self.article_page.related_products.open_quick_view(index=0)
+
+        # Verify quick view modal is open
+        expect(self.page.locator(self.article_page.quick_view_modal.container)).to_be_visible(timeout=10000)
+        
+        # click on the compare button
+        self.article_page.quick_view_modal.click_on_compare_button()
+
+        # Verify notification message
+        notification_message = self.article_page.notification.get_message_text()
+        assert "Success:" in notification_message
+        assert product_name in notification_message
+        assert f"You have added {product_name} to your product comparison!" in notification_message
