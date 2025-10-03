@@ -26,6 +26,9 @@ class Articles(BaseComponent):
 
     def get_article_title(self, index=0):
         return self.article_items.nth(index).locator(self.article_titles).text_content()
+    
+    def get_article_author(self, index=0):
+        return self.article_items.nth(index).locator(self.article_authors).text_content()
 
     def scroll_to_articles(self):
         self.container.scroll_into_view_if_needed()

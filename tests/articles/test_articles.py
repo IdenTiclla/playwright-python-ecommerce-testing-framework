@@ -27,19 +27,27 @@ class TestArticles(BaseTest):
         # Scroll to the articles
         self.home_page.articles.scroll_to_articles()
 
+        # Get author name of the first article
+        author_name_first_article = self.home_page.articles.get_article_author(index=0)
+
         # Click on the first article
         first_article = self.home_page.articles.article_items.nth(0)
         first_article.click()
 
         # wait for the page to load
-        self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+        self.page.wait_for_load_state("networkidle", timeout=30000)
 
         # Get the title and author of the article
         title = self.article_page.get_page_title()
-        author = self.article_page.get_author()
+        author_name_article_page = self.article_page.get_author()
+
+        author_name_on_author_content_component = self.article_page.author_content.get_author_name()
 
         assert title == "amet volutpat consequat mauris nunc congue nisi vitae suscipit tellus"
-        assert author == "Mark Jecno"
+        assert author_name_article_page == author_name_first_article
+        assert author_name_article_page == author_name_on_author_content_component
+        assert author_name_article_page == "Mark Jecno"
+
 
     def test_empty_comment_form(self):
         # Navigate to the home page
