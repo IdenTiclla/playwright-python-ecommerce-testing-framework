@@ -40,8 +40,13 @@ class TestArticles(BaseTest):
         # Get the title and author of the article
         title = self.article_page.get_page_title()
         author_name_article_page = self.article_page.get_author()
+        author_href_article_page = self.article_page.get_author_href()
 
         author_name_on_author_content_component = self.article_page.author_content.get_author_name()
+        author_href_on_author_content_component = self.article_page.author_content.get_author_href()
+
+        # Verify that the author href are the same
+        assert author_href_article_page == author_href_on_author_content_component
 
         assert title == "amet volutpat consequat mauris nunc congue nisi vitae suscipit tellus"
         assert author_name_article_page == author_name_first_article

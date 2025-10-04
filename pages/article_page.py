@@ -32,6 +32,10 @@ class ArticlePage(BasePage):
     def get_author(self):
         return self.author.text_content().strip()
 
+    def get_author_href(self):
+        """Get the author href attribute"""
+        return self.author.get_attribute("href")
+
     def get_views_amount(self):
         """Get the amount of views"""
         return self.views.text_content().strip()
