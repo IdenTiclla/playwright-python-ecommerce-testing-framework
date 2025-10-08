@@ -68,6 +68,10 @@ class TestArticles(BaseTest):
         class_name = self.article_page.comment_form.get_your_name_class()
         assert "is-invalid" not in class_name
 
+        # Check your name border color is gray
+        your_name_border_color = self.article_page.comment_form.get_your_name_border_color()
+        assert your_name_border_color == "rgb(206, 212, 218)"
+
         # Check that email has no invalid class
         email_class_name = self.article_page.comment_form.get_email_input_class()
         assert "is-invalid" not in email_class_name
@@ -76,22 +80,28 @@ class TestArticles(BaseTest):
         comment_class_name = self.article_page.comment_form.get_comment_input_class()
         assert "is-invalid" not in comment_class_name
 
+        # Check that comment border color is gray
+        comment_border_color = self.article_page.comment_form.get_comment_border_color()
+        assert comment_border_color == "rgb(206, 212, 218)"
+
         # Post empty comment
         self.article_page.comment_form.post_comment()
-        self.page.wait_for_load_state("networkidle", timeout=5000)
-
 
         # Check that your name has invalid class
-        class_name = self.article_page.comment_form.get_your_name_class()
-        assert "is-invalid" in class_name
+        expect(self.article_page.comment_form.your_name_input).to_have_class("form-control form-control-lg is-invalid")
+        
+        # Check your name border color change to red
+        expect(self.article_page.comment_form.your_name_input).to_have_css("border-color", "rgb(220, 53, 69)")
 
         # Check email has no invalid class
         email_class_name = self.article_page.comment_form.get_email_input_class()
         assert "is-invalid" not in email_class_name
 
         # Check comment has invalid class
-        comment_class_name = self.article_page.comment_form.get_comment_input_class()
-        assert "is-invalid" in comment_class_name
+        expect(self.article_page.comment_form.comment_input).to_have_class("form-control form-control-lg is-invalid")
+
+        # Check that comment border color change to red
+        expect(self.article_page.comment_form.comment_input).to_have_css("border-color", "rgb(220, 53, 69)")
 
     def test_submitted_comment_pending_approval(self):
         # Navigate to the home page

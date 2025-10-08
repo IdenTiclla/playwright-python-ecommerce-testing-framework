@@ -30,10 +30,14 @@ class CommentForm(BaseComponent):
     def get_your_name_class(self):
         return self.your_name_input.get_attribute("class")
 
+    def get_your_name_border_color(self):
+        return self.your_name_input.evaluate("element => getComputedStyle(element).borderColor")    
+
     def get_email_input_class(self):
         return self.email_input.get_attribute("class")
     
     def get_comment_input_class(self):
         return self.comment_input.get_attribute("class")
 
-    
+    def get_comment_border_color(self):
+        return self.comment_input.evaluate("element => getComputedStyle(element).borderColor")
