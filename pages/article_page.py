@@ -5,6 +5,7 @@ from components.related_products import RelatedProducts
 from components.notification import Notification
 from components.quick_view_modal import QuickViewModal
 from components.author_content import AuthorContent
+from components.related_articles import RelatedArticles
 
 class ArticlePage(BasePage):
 
@@ -17,6 +18,7 @@ class ArticlePage(BasePage):
         self.notification = Notification(page)
         self.quick_view_modal = QuickViewModal(page)
         self.author_content = AuthorContent(page)
+        self.related_articles = RelatedArticles(page)
 
         # Locators
         self.page_title = self.page.locator("h1.h1")

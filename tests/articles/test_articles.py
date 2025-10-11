@@ -344,3 +344,25 @@ class TestArticles(BaseTest):
         assert "Success:" in notification_message
         assert product_name in notification_message
         assert f"You have added {product_name} to your product comparison!" in notification_message
+
+    def test_verify_first_article_information(self):
+        # Navigate to the home page
+        self.home_page.goto()
+        self.home_page.articles.scroll_to_articles()
+
+        # click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # wait for the page to load
+        self.page.wait_for_load_state("networkidle", timeout=30000)
+
+        # Get the title and author of the article
+        article_timestamp = self.article_page.related_articles.get_article_timestamp(index=0)
+        article_author = self.article_page.related_articles.get_article_author(index=0)
+        article_title = self.article_page.related_articles.get_article_title(index=0)
+
+        # Verify the information
+        assert article_timestamp == "25 Feb 2019"
+        assert article_author == "Jolio Balia"
+        assert article_title == "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
