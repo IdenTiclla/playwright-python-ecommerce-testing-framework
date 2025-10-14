@@ -27,6 +27,11 @@ class ArticlePage(BasePage):
         self.comments_amount = self.page.locator("span.extra-comments")
         self.comments = self.page.locator("div#comment ul li")
         self.view_comments_button = self.page.locator("ul a.view-replies")
+        self.cancel_reply_button = self.page.locator("//a[contains(text(), 'Cancel reply')]")
+
+    def click_on_comments_reply_button(self, index: int = 0):
+        """Click on the reply button of a comment by index (0-based)"""
+        self.comments.nth(index).locator("a.reply").click()
 
     def get_page_title(self):
         return self.page_title.text_content().strip()

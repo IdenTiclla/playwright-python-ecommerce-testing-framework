@@ -366,3 +366,28 @@ class TestArticles(BaseTest):
         assert article_timestamp == "25 Feb 2019"
         assert article_author == "Jolio Balia"
         assert article_title == "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
+
+    def test_reply_and_cancel_comment(self):
+        # Navigate to the home page
+        self.home_page.goto()
+
+        # scroll to the articles section
+        self.home_page.articles.scroll_to_articles()
+
+        # click on the first article
+        first_article = self.home_page.articles.article_items.nth(0)
+        first_article.click()
+
+        # verify that comment form in comment section is not visible
+        comment_form_in_comment_section = self.article_page.comments.nth(0).locator(self.article_page.comment_form.container_locator)
+        expect(comment_form_in_comment_section).to_be_hidden()
+
+        # Click on the reply button of the first comment
+        self.article_page.click_on_comments_reply_button(index=0)
+
+        comment_form_in_comment_section = self.article_page.comments.nth(0).locator(self.article_page.comment_form.container_locator)
+        expect(comment_form_in_comment_section).to_be_visible()
+
+        # Cancel the reply
+        self.article_page.cancel_reply_button.click()
+        expect(comment_form_in_comment_section).to_be_hidden()
