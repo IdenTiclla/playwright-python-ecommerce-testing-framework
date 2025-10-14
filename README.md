@@ -13,8 +13,8 @@ This project demonstrates best practices for browser automation using Playwright
 ### Quick Setup (Recommended)
 Using the provided Makefile:
 ```bash
-git clone <repository-url>
-cd practicing-playwright-python
+git clone https://github.com/IdenTiclla/playwright-python-ecommerce-testing-framework.git
+cd playwright-python-ecommerce-testing-framework
 make install
 ```
 
@@ -23,8 +23,8 @@ make install
 #### For Windows Users
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd practicing-playwright-python
+   git clone https://github.com/IdenTiclla/playwright-python-ecommerce-testing-framework.git
+   cd playwright-python-ecommerce-testing-framework
    ```
 2. **Install `uv`**:
    ```powershell
@@ -42,8 +42,8 @@ make install
 #### For macOS/Ubuntu Users
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
-   cd practicing-playwright-python
+   git clone https://github.com/IdenTiclla/playwright-python-ecommerce-testing-framework.git
+   cd playwright-python-ecommerce-testing-framework
    ```
 2. **Install `uv`**:
    ```bash
