@@ -7,6 +7,8 @@ class CommentForm(BaseComponent):
     def __init__(self, page: Page):
         super().__init__(page)
         self.page = page
+        self.container_locator = "form#form-comment"
+        self.container = page.locator(self.container_locator)
         self.your_name_input = page.locator("input[name='name']")
         self.email_input = page.locator("input[name='email']")
         self.comment_input = page.locator("textarea#input-comment")
