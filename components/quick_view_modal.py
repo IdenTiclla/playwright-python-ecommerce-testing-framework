@@ -35,7 +35,8 @@ class QuickViewModal():
         return self.page.locator(self.price).text_content()
     
     def get_quantity(self):
-        return self.page.locator(self.quantity).text_content()
+        """Get the quantity from the quick view modal"""
+        return int(self.page.locator(self.quantity).input_value())
     
     def get_product_code(self):
         return self.page.locator(self.product_code).text_content()
@@ -64,6 +65,14 @@ class QuickViewModal():
 
     def click_on_compare_button(self):
         self.page.locator(self.compare_button).click()
+
+    def increase_quantity(self):
+        """Increase the quantity of the product"""
+        self.page.locator(self.increase_quantity_button).click()
+
+    def decrease_quantity(self):
+        """Decrease the quantity of the product"""
+        self.page.locator(self.decrease_quantity_button).click()
     
     
     def close(self):
