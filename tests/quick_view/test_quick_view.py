@@ -51,7 +51,7 @@ class TestQuickView(BaseTest):
     def test_quick_view_with_in_stock_product(self):
         self.home_page.goto()
 
-        self.home_page.top_products.show_quick_view(index=2)
+        self.home_page.top_products.show_quick_view(index=3)
 
         quick_view_modal = self.home_page.quick_view_modal
         expect(self.page.locator(quick_view_modal.container)).to_be_visible(timeout=10000)
@@ -69,8 +69,28 @@ class TestQuickView(BaseTest):
 
         quick_view_modal.close()
         expect(self.page.locator(quick_view_modal.container)).to_be_hidden(timeout=10000)
-        
 
+    def test_increment_quantity_on_quick_view_modal(self):
+        # navigate to the home page
+        self.home_page.goto()
 
+        # scroll down to the top products section
+        self.home_page.top_products.scroll_to_top_products()
 
+        # show quick view modal
+        self.home_page.top_products.show_quick_view(index=0)
 
+        quick_view_modal = self.home_page.quick_view_modal
+
+        # get initial quantity
+        initial_quantity = quick_view_modal.get_quantity()
+
+        # increment quantity 9 times
+        for i in range(9):
+            quick_view_modal.increase_quantity()
+
+        # get final quantity
+        final_quantity = quick_view_modal.get_quantity()
+
+        # assert that the final quantity is the initial quantity plus 9
+        assert final_quantity == initial_quantity + 9
