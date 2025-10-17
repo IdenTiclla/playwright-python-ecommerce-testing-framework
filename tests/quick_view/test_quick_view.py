@@ -116,3 +116,39 @@ class TestQuickView(BaseTest):
 
         # assert that the final quantity is the initial quantity 1
         assert final_quantity == 1, "Final quantity should be 1"
+
+    def test_increment_and_decrement_quantity_on_quick_view_modal(self):
+        # navigate to the home page
+        self.home_page.goto()
+
+        # scroll down to the top products section
+        self.home_page.top_products.scroll_to_top_products()
+
+        # show quick view modal
+        self.home_page.top_products.show_quick_view(index=0)
+
+        quick_view_modal = self.home_page.quick_view_modal
+
+        # get initial quantity
+        initial_quantity = quick_view_modal.get_quantity()
+
+        # increment quantity 9 times
+        for i in range(9):
+            quick_view_modal.increase_quantity()
+
+        # get final quantity
+        final_quantity = quick_view_modal.get_quantity()
+
+        # assert that the final quantity is the initial quantity plus 9
+        assert final_quantity == initial_quantity + 9
+
+
+        # decrement quantity 9 times
+        for i in range(9):
+            quick_view_modal.decrease_quantity()
+
+        # get final quantity
+        final_quantity = quick_view_modal.get_quantity()
+
+        # assert that the final quantity is the initial quantity 1
+        assert final_quantity == 1, "Final quantity should be 1"
