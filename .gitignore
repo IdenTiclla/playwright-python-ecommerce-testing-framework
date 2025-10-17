@@ -1,3 +1,4 @@
+# Python
 __pycache__
 *.pyc
 *.pyo
@@ -5,7 +6,13 @@ __pycache__
 *.pyw
 *.pyz
 *.pywz
+# Environment variables
 .env
+# VSCode
 .vscode/
-
+# Claude
 .claude/
+# Github
+.github/
+# Gemini
+.gemini/
