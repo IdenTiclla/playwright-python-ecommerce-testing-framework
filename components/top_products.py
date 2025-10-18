@@ -1,12 +1,13 @@
 from playwright.sync_api import Page
 from playwright.sync_api import expect
-from pages.base_page import BasePage
-class TopProducts(BasePage):
+from components.base_component import BaseComponent
+
+class TopProducts(BaseComponent):
     def __init__(self, page: Page):
-        self.page = page
+        super().__init__(page)
         self.section = self.page.locator("//h3[contains(text(), 'Top Products')]/parent::div/parent::div")
         self.product_items = self.page.locator("//h3[contains(text(), 'Top Products')]/parent::div/parent::div//div[contains(@class, 'product-thumb image-top')]")
-        self.cart_buttons = "button[class*='btn-cart']"
+        # self.cart_buttons = "button[class*='btn-cart']"
         self.wishlist_buttons = "button[class*='btn-wishlist']"
         self.compare_buttons = f"{self.product_items} button[class*='btn-compare']"
         self.quick_view_buttons = "button[class*='quick-view']"
@@ -30,18 +31,34 @@ class TopProducts(BasePage):
     def add_product_to_cart(self, index=0):
         # Ensure section is visible using expect
         self.scroll_to_top_products()
-        # self.page.wait_for_timeout(500)
+        
+        # Wait for the page to be fully loaded and stable
         self.page.wait_for_load_state("networkidle", timeout=5000)
-
+        self.page.wait_for_load_state("domcontentloaded")
+        
+        # Wait for animations and page to settle
+        self.page.wait_for_timeout(300)
         
         # Hover over product to make button accessible
-        # self.product_items.nth(index).scroll_into_view_if_needed()
         self.hover_over_top_product(index)
         
         # Get cart button within this specific product
         cart_button = self.product_items.nth(index).locator("button[class*='btn-cart']")
 
-        cart_button.click()
+        # Wait for button to be visible and stable
+        expect(cart_button).to_be_visible(timeout=10000)
+        
+        # Ensure element is stable before clicking
+        cart_button.scroll_into_view_if_needed()
+        self.page.wait_for_timeout(200)
+        
+        # Try to click with better error handling
+        try:
+            cart_button.click(timeout=10000)
+        except Exception:
+            # If normal click fails, try with force option as fallback
+            self.page.wait_for_timeout(500)
+            cart_button.click(force=True)
 
     def add_product_to_wishlist(self, index=0):
         # self.page.locator(self.wishlist_buttons).nth(index).click()
