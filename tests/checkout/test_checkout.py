@@ -16,6 +16,10 @@ class TestCheckout(BaseTest):
         # click on the checkout button
         self.home_page.notification.click_on_checkout_button()
 
+        # verify alert message
+        alert_messages = self.shopping_cart_page.alert_component.get_alert_messages()
+        assert any("Products marked with *** are not available in the desired quantity or not in stock!" in alert_message for alert_message in alert_messages)
+
         # assert page url
         assert self.page.url == "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"
     
