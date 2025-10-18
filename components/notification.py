@@ -76,3 +76,6 @@ class Notification:
                 self.page.wait_for_timeout(1000)
                 continue
         
+    def click_on_checkout_button(self):
+        """Click on the checkout button"""
+        self.checkout_button.click()
