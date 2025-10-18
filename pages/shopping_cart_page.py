@@ -1,6 +1,7 @@
 from pages.base_page import BasePage
 from playwright.sync_api import Page
 from utils.config import BASE_URL
+from components.alert import Alert
 
 class ShoppingCartPage(BasePage):
     
@@ -10,6 +11,9 @@ class ShoppingCartPage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
+
+        # Components
+        self.alert_component = Alert(page)
 
         # Locators
         self.page_title = self.page.locator("div.content h1")
