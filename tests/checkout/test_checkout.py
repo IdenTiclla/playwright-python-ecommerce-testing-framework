@@ -46,4 +46,12 @@ class TestCheckout(BaseTest):
 
         # verify page url
         assert get_page_url == "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/checkout"
-    
+
+        # verify the register radio is selected by default
+        assert self.checkout_page.is_register_radio_selected() == True
+
+        # verify the login radio is not selected
+        assert self.checkout_page.is_login_radio_selected() == False
+
+        # verify the guest radio is not selected
+        assert self.checkout_page.is_guest_radio_selected() == False
