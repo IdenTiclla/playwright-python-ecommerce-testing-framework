@@ -28,3 +28,7 @@ class CheckoutPage(BasePage):
     def is_guest_radio_selected(self):
         """Check if the guest radio is selected"""
         return self.guest_radio.is_checked()
+
+    def account_radio_options_are_displayed(self):
+        """Check if the account radio options are displayed"""
+        return self.login_radio.is_visible() and self.register_radio.is_visible() and self.guest_radio.is_visible()
