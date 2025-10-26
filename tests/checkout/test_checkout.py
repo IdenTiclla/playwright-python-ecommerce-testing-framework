@@ -1,6 +1,7 @@
 from tests.base_test import BaseTest
-import time
 from utils.data_generator import generate_random_email, generate_random_first_name, generate_random_last_name, generate_random_phone_number, generate_random_password
+
+from playwright.sync_api import expect
 
 class TestCheckout(BaseTest):
     
@@ -97,3 +98,77 @@ class TestCheckout(BaseTest):
         
         # verify that account radio options aren't displayed
         assert not self.checkout_page.account_radio_options_are_displayed()
+
+    def test_complete_checkout_process_with_new_registered_user(self):
+        # navigate to the home page
+        self.home_page.goto()
+
+        # go to register page
+        self.home_page.navbar_horizontal.click_my_account_option("Register")
+
+        # register a new user with random data
+        generated_password = generate_random_password()
+        firstname = generate_random_first_name()
+        lastname = generate_random_last_name()
+        email = generate_random_email()
+        telephone = generate_random_phone_number()
+        self.register_page.register(
+            firstname=firstname,
+            lastname=lastname,
+            email=email,
+            telephone=telephone,
+            password=generated_password,
+            password_confirm=generated_password,
+            subscribe_newsletter=True,
+            accept_terms=True
+        )
+
+        # go to home page
+        self.home_page.goto()
+
+        # scroll down to the top products section
+        self.home_page.top_products.scroll_to_top_products()
+
+        # add third product to the cart
+        self.home_page.top_products.add_product_to_cart(index=3)
+
+        # click on the checkout button
+        self.home_page.notification.click_on_checkout_button()
+
+        # verify checkout page url
+
+        expect(self.page).to_have_url(f"https://ecommerce-playground.lambdatest.io/index.php?route=checkout/checkout")
+
+        # fill billing address form
+        self.checkout_page.billing_address_form.fill_billing_address_form(
+            firstname=firstname,
+            lastname=lastname,
+            company="Test Company",
+            address_1="123 Main St",
+            address_2="Apt 1",
+            city="Test City",
+            postcode="12345",
+            country="United States",
+            zone="California"
+        )
+
+        # fill comment input
+        self.checkout_page.fill_comment_input("This is a test comment")
+
+        # accept terms and conditions
+        self.checkout_page.accept_terms_and_conditions()
+
+        # click continue button
+        self.checkout_page.click_continue_button()
+
+        expect(self.page).to_have_url(f"https://ecommerce-playground.lambdatest.io/index.php?route=extension/maza/checkout/confirm")
+
+        order_information = self.confirm_order_page.get_order_information()
+
+        assert len(order_information["products"]) == 1
+
+        # click on the confirm order button
+        self.confirm_order_page.click_on_confirm_order_button()
+
+        # verify success page url
+        expect(self.page).to_have_url("https://ecommerce-playground.lambdatest.io/index.php?route=checkout/success")

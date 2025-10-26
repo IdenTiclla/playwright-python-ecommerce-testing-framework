@@ -12,6 +12,7 @@ from pages.shopping_cart_page import ShoppingCartPage
 from pages.product_page import ProductPage
 from pages.article_page import ArticlePage
 from pages.checkout_page import CheckoutPage
+from pages.confirm_order_page import ConfirmOrderPage
 
 
 @pytest.mark.usefixtures("page")
@@ -36,5 +37,6 @@ class BaseTest:
         self.product_page = ProductPage(page)
         self.article_page = ArticlePage(page)
         self.checkout_page = CheckoutPage(page)
+        self.confirm_order_page = ConfirmOrderPage(page)
         
     # El teardown lo maneja conftest.py - no necesitamos duplicarlo aquí
